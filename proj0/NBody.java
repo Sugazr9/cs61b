@@ -40,16 +40,12 @@ public class NBody {
 		while (track_time <= T) {
 			double[] xForces = new double[system.length];
 			double[] yForces = new double[system.length];
-			int counter = 0;
-			while (counter < system.length) {
-				xForces[counter] = system[counter].calcNetForceExertedByX(system);
-				yForces[counter] = system[counter].calcNetForceExertedByY(system);
-				counter += 1;
+			for (int i = 0; i < system.length; i++) {
+				xForces[i] = system[i].calcNetForceExertedByX(system);
+				yForces[i] = system[i].calcNetForceExertedByY(system);
 			}
-			counter = 0;
-			while (counter < system.length) {
-				system[counter].update(dt, xForces[counter], yForces[counter]);
-				counter += 1;
+			for (int i = 0; i < system.length; i++) {
+				system[i].update(dt, xForces[i], yForces[i]);
 			}
 			StdDraw.picture(0, 0, "images/starfield.jpg", radius*2, radius*2);
 			for (Planet curr : system) {
@@ -57,6 +53,12 @@ public class NBody {
 			}
 			StdDraw.show(10);
 			track_time += dt;
+		}
+		StdOut.printf("%d\n", system.length);
+		StdOut.printf("%.2e\n", radius);
+		for (int i = 0; i < system.length; i++) {
+			StdOut.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
+   			system[i].xxPos, system[i].yyPos, system[i].xxVel, system[i].yyVel, system[i].mass, system[i].imgFileName);	
 		}
 	}
 }
