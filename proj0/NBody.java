@@ -17,7 +17,7 @@ public class NBody {
 			double velX = ready.readDouble();
 			double velY = ready.readDouble();
 			double mass = ready.readDouble();
-			String img = ready.readString();
+			String img = "images/" + ready.readString();
 			system[counter] = new Planet(posX, posY, velX, velY, mass, img);
 			counter += 1;
 		}
@@ -30,26 +30,28 @@ public class NBody {
 		String filename = args[2];
 		double radius = readRadius(filename);
 		Planet[] system = readPlanets(filename);
+		StdAudio.play("audio/Carol_of_the_Bells.wav");
 		StdDraw.setScale(radius*-1, radius);
-		StdDraw.picture(0, 0, "starfield.jpg", radius, radius);
+		StdDraw.picture(0, 0, "images/starfield.jpg", radius*2, radius*2);
 		for (Planet curr : system) {
 			curr.draw();
 		}
-		int track_time = 0
+		double track_time = 0;
 		while (track_time <= T) {
 			double[] xForces = new double[system.length];
 			double[] yForces = new double[system.length];
 			int counter = 0;
 			while (counter < system.length) {
-				xForces[counter] = system[counter].calcForceExertedByX;
-				yForces[counter] = system[counter].calcForceExertedByY;
+				xForces[counter] = system[counter].calcNetForceExertedByX(system);
+				yForces[counter] = system[counter].calcNetForceExertedByY(system);
+				counter += 1;
 			}
 			counter = 0;
 			while (counter < system.length) {
 				system[counter].update(dt, xForces[counter], yForces[counter]);
+				counter += 1;
 			}
-			StdDraw.setScale(radius*-1, radius);
-			StdDraw.picture(0, 0, "starfield.jpg", radius, radius);
+			StdDraw.picture(0, 0, "images/starfield.jpg", radius*2, radius*2);
 			for (Planet curr : system) {
 				curr.draw();
 			}
