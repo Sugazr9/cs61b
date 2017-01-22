@@ -35,5 +35,26 @@ public class NBody {
 		for (Planet curr : system) {
 			curr.draw();
 		}
+		int track_time = 0
+		while (track_time <= T) {
+			double[] xForces = new double[system.length];
+			double[] yForces = new double[system.length];
+			int counter = 0;
+			while (counter < system.length) {
+				xForces[counter] = system[counter].calcForceExertedByX;
+				yForces[counter] = system[counter].calcForceExertedByY;
+			}
+			counter = 0;
+			while (counter < system.length) {
+				system[counter].update(dt, xForces[counter], yForces[counter]);
+			}
+			StdDraw.setScale(radius*-1, radius);
+			StdDraw.picture(0, 0, "starfield.jpg", radius, radius);
+			for (Planet curr : system) {
+				curr.draw();
+			}
+			StdDraw.show(10);
+			track_time += dt;
+		}
 	}
 }
