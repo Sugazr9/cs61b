@@ -17,7 +17,7 @@ public class NBody {
 			double velX = ready.readDouble();
 			double velY = ready.readDouble();
 			double mass = ready.readDouble();
-			String img = "images/" + ready.readString();
+			String img = ready.readString();
 			system[counter] = new Planet(posX, posY, velX, velY, mass, img);
 			counter += 1;
 		}
