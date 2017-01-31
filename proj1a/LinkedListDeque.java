@@ -79,17 +79,17 @@ public class LinkedListDeque<Item> {
         }
         return place.val;
     }
-    private Item get_helper(int index, NakedList l) {
+    private Item gethelper(int index, NakedList l) {
         if (index == 0) {
             return l.val;
         }
-        return get_helper(index - 1, l.next);
+        return gethelper(index - 1, l.next);
     }
     public Item getRecursive(int index) {
         if (index >= size) {
             return null;
         }
         NakedList place = sentinel.next;
-        return get_helper(index, place);
+        return gethelper(index, place);
     }
 }
