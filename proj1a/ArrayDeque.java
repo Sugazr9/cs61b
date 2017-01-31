@@ -20,7 +20,10 @@ public class ArrayDeque<Item> {
         return helper_next(index);
     }
     private int helper_next(int index) {
-        if (index == storage.length - 1) {
+        if (isEmpty()) {
+            return index;
+        }
+        else if (index == storage.length - 1) {
             return 0;
         }
         return index + 1;
@@ -32,7 +35,10 @@ public class ArrayDeque<Item> {
         return helper_previous(index);
     }
     private int helper_previous(int index) {
-        if (index == 0) {
+        if (isEmpty()) {
+            return index;
+        }
+        else if (index == 0) {
             return storage.length - 1;
         }
         return index - 1;
