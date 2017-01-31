@@ -9,25 +9,26 @@ public class LinkedListDeque<Item> {
         private NakedList next;
         private NakedList previous;
 
-        public NakedList(Item f, NakedList rest) {
+        public NakedList(Item f, NakedList rest, NakedList before) {
             val =f;
             next =rest;
+            previous = before;
         }
     }
     public LinkedListDeque() {
-        sentinel = new NakedList(null, null);
+        sentinel = new NakedList(null, null, null);
         size = 0;
         sentinel.next = sentinel;
         sentinel.previous = sentinel;
     }
     public void addFirst(Item x) {
         size += 1;
-        sentinel.next.previous = new NakedList(x, sentinel.next);
+        sentinel.next.previous = new NakedList(x, sentinel.next, sentinel);
         sentinel.next = sentinel.next.previous;
     }
     public void addLast(Item x) {
         size += 1;
-        sentinel.previous.next = new NakedList(x, sentinel);
+        sentinel.previous.next = new NakedList(x, sentinel, sentinel.previous);
         sentinel.previous = sentinel.previous.next;
     }
     public boolean isEmpty() {
@@ -45,6 +46,7 @@ public class LinkedListDeque<Item> {
                 System.out.print(pointer.val + " ");
                 pointer = pointer.next;
             }
+        System.out.println();
     }
     public Item removeFirst() {
         if (sentinel.next == sentinel) {

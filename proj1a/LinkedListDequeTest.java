@@ -29,7 +29,7 @@ public class LinkedListDequeTest {
 		}
 	}
 
-	/** Adds a few things to the list, checking isEmpty() and size() are correct, 
+	/** Adds a few things to the list, checking isEmpty() and size() are correct,
 	  * finally printing the results. 
 	  *
 	  * && is the "and" operation. */
@@ -67,11 +67,30 @@ public class LinkedListDequeTest {
 		// should be empty 
 		boolean passed = checkEmpty(true, lld1.isEmpty());
 
-		lld1.addFirst(10);
+		lld1.addLast(10);
 		// should not be empty 
 		passed = checkEmpty(false, lld1.isEmpty()) && passed;
 
-		lld1.removeFirst();
+		lld1.addLast(10);
+		// should not be empty
+		passed = checkEmpty(false, lld1.isEmpty()) && passed;
+		lld1.addLast(10);
+		// should not be empty
+		passed = checkEmpty(false, lld1.isEmpty()) && passed;
+		lld1.addLast(10);
+		// should not be empty
+		passed = checkEmpty(false, lld1.isEmpty()) && passed;
+
+		lld1.removeLast();
+		// should not be empty
+		passed = checkEmpty(false, lld1.isEmpty()) && passed;
+		lld1.removeLast();
+		// should not be empty
+		passed = checkEmpty(false, lld1.isEmpty()) && passed;
+		lld1.removeLast();
+		// should be empty
+		passed = checkEmpty(false, lld1.isEmpty()) && passed;
+		lld1.removeLast();
 		// should be empty 
 		passed = checkEmpty(true, lld1.isEmpty()) && passed;
 

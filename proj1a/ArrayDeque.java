@@ -1,5 +1,3 @@
-import sun.font.TrueTypeFont;
-
 /**
  * Created by Arvind on 1/28/2017.
  */
@@ -21,7 +19,7 @@ public class ArrayDeque<Item> {
         if (isEmpty()) {
             return 0;
         }
-        if (index == storage.length-1) {
+        if (index == storage.length - 1) {
             return 0;
         }
         return index + 1;
@@ -36,18 +34,18 @@ public class ArrayDeque<Item> {
         return index - 1;
     }
     private void resize(String command) {
-        if (command == "increase"){
-            Item[] a = (Item[]) new Object[storage.length*2];
+        if (command.equals("increase")){
+            Item[] a = (Item[]) new Object[storage.length * 2];
             System.arraycopy(storage, front_index, a, 0, extension);
             System.arraycopy(storage, 0, a, extension, size-extension);
             storage = a;
         }
         else {
-                int ideal = storage.length/2;
-                Item[] a = (Item[]) new Object[ideal];
-                System.arraycopy(storage, front_index, a, 0, extension);
-                System.arraycopy(storage, 0, a, extension, size-extension);
-                storage = a;
+            int ideal = storage.length / 2;
+            Item[] a = (Item[]) new Object[ideal];
+            System.arraycopy(storage, front_index, a, 0, extension);
+            System.arraycopy(storage, 0, a, extension, size - extension);
+            storage = a;
         }
     }
     public void addFirst(Item x){
@@ -79,9 +77,9 @@ public class ArrayDeque<Item> {
     public void printDeque(){
         int pointer = front_index;
         while (storage[pointer] != null) {
-                System.out.print(storage[pointer] + " ");
-                pointer = next(pointer);
-            }
+            System.out.print(storage[pointer] + " ");
+            pointer = next(pointer);
+        }
     }
     public Item removeFirst(){
         if (size == 0) {
@@ -92,12 +90,12 @@ public class ArrayDeque<Item> {
         storage[front_index] = null;
         front_index = next(front_index);
         extension--;
-        if (front_index<= back_index) {extension=0;}
+        if (front_index <= back_index) {extension = 0;}
         if (size < 16){
-            if(storage.length*0.1 > size && storage.length > 5) {resize("decrease");}
+            if(storage.length * 0.1 > size && storage.length > 5) {resize("decrease");}
         }
         else {
-            if(storage.length/4 > size) {resize("increase");}
+            if(storage.length / 4 > size) {resize("increase");}
         }
         return val;
     }
@@ -108,12 +106,15 @@ public class ArrayDeque<Item> {
         Item val = storage[back_index];
         size--;
         storage[back_index] = null;
+        if (back_index == 0) {
+            extension = 0;
+        }
         back_index = previous(back_index);
         if (size < 16){
-            if(storage.length*0.1 > size && storage.length > 5) {resize("decrease");}
+            if(storage.length * 0.1 > size && storage.length > 5) {resize("decrease");}
         }
         else {
-            if(storage.length/4 > size) {resize("increase");}
+            if(storage.length / 4 > size) {resize("increase");}
         }
         return val;
     }
