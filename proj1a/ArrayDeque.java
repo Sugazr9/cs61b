@@ -58,7 +58,7 @@ public class ArrayDeque<Item> {
         front_index = previous(front_index);
         storage[front_index] = x;
         size++;
-        if (front_index > back_index) {
+        if (front_index >= back_index) {
             extension++;
         }
     }
@@ -69,8 +69,6 @@ public class ArrayDeque<Item> {
         back_index = next(back_index);
         storage[back_index] = x;
         size++;
-        if (front_index > back_index) {
-            extension++;
         }
     }
     public boolean isEmpty() {
