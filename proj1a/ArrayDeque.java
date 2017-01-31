@@ -17,6 +17,8 @@ public class ArrayDeque<Item> {
     }
     private int next(int index) {
         if (isEmpty()) {
+            front_index = 0;
+            back_index = 0;
             return 0;
         }
         if (index == storage.length - 1) {
@@ -26,6 +28,8 @@ public class ArrayDeque<Item> {
     }
     private int previous(int index) {
         if (isEmpty()) {
+            front_index = 0;
+            back_index = 0;
             return 0;
         }
         if (index == 0) {
@@ -69,6 +73,8 @@ public class ArrayDeque<Item> {
         back_index = next(back_index);
         storage[back_index] = x;
         size++;
+        if (front_index > back_index) {
+            extension++;
     }
     public boolean isEmpty() {
         if (size == 0) {
