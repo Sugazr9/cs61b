@@ -3,7 +3,7 @@
  */
 public class LinkedListDeque<Item> {
     public NakedList sentinel;
-    public int size;
+    private int size;
     private class NakedList {
         private Item val;
         private NakedList next;
@@ -13,14 +13,6 @@ public class LinkedListDeque<Item> {
             val =f;
             next =rest;
         }
-    }
-    public LinkedListDeque(Item a) {
-        sentinel = new NakedList(null, null);
-        sentinel.next = new NakedList(a, sentinel);
-        size = 1;
-        sentinel.next.previous = sentinel;
-        sentinel.previous = sentinel.next;
-
     }
     public LinkedListDeque() {
         sentinel = new NakedList(null, null);
@@ -32,11 +24,17 @@ public class LinkedListDeque<Item> {
         size += 1;
         sentinel.next.previous = new NakedList(x, sentinel.next);
         sentinel.next = sentinel.next.previous;
+        if (sentinel.previous == sentinel) {
+            sentinel.previous = sentinel.next;
+        }
     }
     public void addLast(Item x) {
         size += 1;
         sentinel.previous.next = new NakedList(x, sentinel);
         sentinel.previous = sentinel.previous.next;
+        if (sentinel.next == sentinel) {
+            sentinel.next = sentinel.previous;
+        }
     }
     public boolean isEmpty() {
         if (sentinel.next == sentinel) {
@@ -85,7 +83,7 @@ public class LinkedListDeque<Item> {
         }
         return place.val;
     }
-    public Item get_helper(int index, NakedList l) {
+    private Item get_helper(int index, NakedList l) {
         if (index == 0) {
             return l.val;
         }

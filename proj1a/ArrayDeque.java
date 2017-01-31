@@ -17,7 +17,7 @@ public class ArrayDeque<Item> {
         extension = 0;
 
     }
-    public int next(int index) {
+    private int next(int index) {
         if (isEmpty()) {
             return 0;
         }
@@ -26,7 +26,7 @@ public class ArrayDeque<Item> {
         }
         return index + 1;
     }
-    public int previous(int index) {
+    private int previous(int index) {
         if (isEmpty()) {
             return 0;
         }
@@ -35,7 +35,7 @@ public class ArrayDeque<Item> {
         }
         return index - 1;
     }
-    public void resize(String command) {
+    private void resize(String command) {
         if (command == "increase"){
             Item[] a = (Item[]) new Object[storage.length*2];
             System.arraycopy(storage, front_index, a, 0, extension);
