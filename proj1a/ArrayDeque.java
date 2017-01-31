@@ -37,8 +37,7 @@ public class ArrayDeque<Item> {
         if (command.equals("increase")) {
             Item[] a = (Item[]) new Object[storage.length * 2];
             while (counter < size) {
-                System.arraycopy(storage, pointer, a, counter, 1);
-                pointer = next(pointer);
+                a[counter] = get(counter);
                 counter++;
             }
             storage = a;
@@ -46,8 +45,7 @@ public class ArrayDeque<Item> {
         else {
             Item[] a = (Item[]) new Object[storage.length / 2];
             while (counter < size) {
-                System.arraycopy(storage, pointer, a, counter, 1);
-                pointer = next(pointer);
+                a[counter] = get(counter);
                 counter++;
             }
             storage = a;
@@ -130,6 +128,9 @@ public class ArrayDeque<Item> {
     }
     public Item get(int index) {
         int num_to_break = storage.length - front;
+        if (index >  size - 1) {
+            return null;
+        }
         if (front > back && index >= num_to_break) {
             index -= num_to_break;
         }
