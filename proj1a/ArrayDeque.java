@@ -39,23 +39,22 @@ public class ArrayDeque<Item> {
     }
     private void resize(String command) {
         int pointer = front_index;
+        int counter = 0;
         if (command.equals("increase")) {
             Item[] a = (Item[]) new Object[storage.length * 2];
-            System.arraycopy(storage, pointer, a, 0, 1);
-            pointer = next(pointer);
-            while (pointer != front_index) {
-                System.arraycopy(storage, pointer, a, 0, 1);
+            while (counter < size) {
+                System.arraycopy(storage, pointer, a, counter, 1);
                 pointer = next(pointer);
+                counter++;
             }
             storage = a;
         }
         else {
             Item[] a = (Item[]) new Object[storage.length / 2];
-            System.arraycopy(storage, pointer, a, 0, 1);
-            pointer = next(pointer);
-            while (pointer != front_index) {
-                System.arraycopy(storage, pointer, a, 0, 1);
+            while (counter < size) {
+                System.arraycopy(storage, pointer, a, counter, 1);
                 pointer = next(pointer);
+                counter++;
             }
             storage = a;
         }
