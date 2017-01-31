@@ -49,11 +49,10 @@ public class LinkedListDeque<Item> {
     }
     public void printDeque() {
         NakedList pointer = sentinel.next;
-        while (pointer.next != sentinel) {
+        while (pointer != sentinel) {
                 System.out.print(pointer.val + " ");
                 pointer = pointer.next;
             }
-        System.out.println(pointer.val);
     }
     public Item removeFirst() {
         if (sentinel.next == sentinel) {
