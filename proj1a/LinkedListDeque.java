@@ -2,7 +2,7 @@
  * Created by Arvind on 1/27/2017.
  */
 public class LinkedListDeque<Item> {
-    public NakedList sentinel;
+    private NakedList sentinel;
     private int size;
     private class NakedList {
         private Item val;
@@ -24,17 +24,11 @@ public class LinkedListDeque<Item> {
         size += 1;
         sentinel.next.previous = new NakedList(x, sentinel.next);
         sentinel.next = sentinel.next.previous;
-        if (sentinel.previous == sentinel) {
-            sentinel.previous = sentinel.next;
-        }
     }
     public void addLast(Item x) {
         size += 1;
         sentinel.previous.next = new NakedList(x, sentinel);
         sentinel.previous = sentinel.previous.next;
-        if (sentinel.next == sentinel) {
-            sentinel.next = sentinel.previous;
-        }
     }
     public boolean isEmpty() {
         if (sentinel.next == sentinel) {
