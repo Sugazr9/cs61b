@@ -14,12 +14,6 @@ public class ArrayDeque<Item> {
 
     }
     private int next(int index) {
-        if (index == back_index) {
-            return front_index;
-        }
-        return helper_next(index);
-    }
-    private int helper_next(int index) {
         if (isEmpty()) {
             return index;
         }
@@ -29,12 +23,6 @@ public class ArrayDeque<Item> {
         return index + 1;
     }
     private int previous(int index) {
-        if (index == front_index) {
-            return back_index;
-        }
-        return helper_previous(index);
-    }
-    private int helper_previous(int index) {
         if (isEmpty()) {
             return index;
         }
@@ -71,7 +59,7 @@ public class ArrayDeque<Item> {
         if (size == storage.length) {
             resize("increase");
         }
-        front_index = helper_previous(front_index);
+        front_index = previous(front_index);
         storage[front_index] = x;
         size++;
     }
@@ -79,7 +67,7 @@ public class ArrayDeque<Item> {
         if (size == storage.length) {
             resize("increase");
         }
-        back_index = helper_next(back_index);
+        back_index = next(back_index);
         storage[back_index] = x;
         size++;
     }
@@ -94,17 +82,14 @@ public class ArrayDeque<Item> {
     }
     public void printDeque() {
         int pointer = front_index;
-        if (isEmpty()) {
-        } else {
-            while (pointer != back_index) {
-                System.out.print(storage[pointer] + " ");
-                pointer = next(pointer);
-            }
-            System.out.println(storage[pointer]);
+        while (storage[pointer] != null) {
+            System.out.print(storage[pointer] + " ");
+            pointer = next(pointer);
         }
+        System.out.println();
     }
     public Item removeFirst() {
-        if (size == 0) {
+        if (isEmpty()) {
             return null;
         }
         Item val = storage[front_index];
@@ -114,17 +99,15 @@ public class ArrayDeque<Item> {
         if (size < 16) {
             if (storage.length * 0.1 > size && storage.length > 5) {
                 resize("decrease");
-            }
-        }
+            } }
         else {
             if (storage.length / 4 > size) {
                 resize("decrease");
-            }
-        }
+            } }
         return val;
     }
     public Item removeLast() {
-        if (size == 0) {
+        if (isEmpty()) {
             return null;
         }
         Item val = storage[back_index];
@@ -134,25 +117,21 @@ public class ArrayDeque<Item> {
         if (size < 16) {
             if (storage.length * 0.1 > size && storage.length > 5) {
                 resize("decrease");
-            }
-        }
+            } }
         else {
             if (storage.length / 4 > size) {
                 resize("decrease");
-            }
-        }
+            } }
         return val;
     }
     public Item get(int index) {
         int num_to_break = storage.length - front_index;
-        if (index >= size) {
-            return null;
-        }
-        if (index >= num_to_break) {
-            return storage[index - num_to_break];
+        if (front_index > back_index && index >= num_to_break) {
+            index -= num_to_break;
         }
         else {
-            return storage[front_index + index];
+            index += front_index;
         }
+        return storage[index];
     }
 }
