@@ -75,6 +75,7 @@ public class ArrayDeque<Item> {
         size++;
         if (front_index > back_index) {
             extension++;
+        }
     }
     public boolean isEmpty() {
         if (size == 0) {
