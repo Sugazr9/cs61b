@@ -39,19 +39,19 @@ public class ArrayDeque<Item> {
             System.arraycopy(storage, front_index, a, 0, extension);
             System.arraycopy(storage, 0, a, extension, size - extension);
             storage = a;
-            front_index = 0;
-            back_index = previous(size);
         }
         else {
             Item[] a = (Item[]) new Object[storage.length / 2];
             System.arraycopy(storage, front_index, a, 0, extension);
             System.arraycopy(storage, 0, a, extension, size - extension);
             storage = a;
-            front_index = 0;
-            back_index = previous(size);
         }
+
+        front_index = 0;
+        back_index = previous(size);
+        extension = 0;
     }
-    public void addFirst(Item x){
+    public void addFirst(Item x) {
         if (size == storage.length) {
             resize("increase");
         }
@@ -76,17 +76,17 @@ public class ArrayDeque<Item> {
         }
         return false;
     }
-    public int size(){
+    public int size() {
         return size;
     }
-    public void printDeque(){
+    public void printDeque() {
         int pointer = front_index;
         while (storage[pointer] != null) {
             System.out.print(storage[pointer] + " ");
             pointer = next(pointer);
         }
     }
-    public Item removeFirst(){
+    public Item removeFirst() {
         if (size == 0) {
             return null;
         }
@@ -98,19 +98,19 @@ public class ArrayDeque<Item> {
         if (front_index <= back_index) {
             extension = 0;
         }
-        if (size < 16){
-            if(storage.length * 0.1 > size && storage.length > 5) {
+        if (size < 16) {
+            if (storage.length * 0.1 > size && storage.length > 5) {
                 resize("decrease");
             }
         }
         else {
-            if(storage.length / 4 > size) {
+            if (storage.length / 4 > size) {
                 resize("decrease");
             }
         }
         return val;
     }
-    public Item removeLast(){
+    public Item removeLast() {
         if (size == 0) {
             return null;
         }
@@ -121,13 +121,13 @@ public class ArrayDeque<Item> {
             extension = 0;
         }
         back_index = previous(back_index);
-        if (size < 16){
-            if(storage.length * 0.1 > size && storage.length > 5) {
+        if (size < 16) {
+            if (storage.length * 0.1 > size && storage.length > 5) {
                 resize("decrease");
             }
         }
         else {
-            if(storage.length / 4 > size) {
+            if (storage.length / 4 > size) {
                 resize("decrease");
             }
         }
