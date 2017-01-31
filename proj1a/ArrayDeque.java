@@ -99,10 +99,14 @@ public class ArrayDeque<Item> {
             extension = 0;
         }
         if (size < 16){
-            if(storage.length * 0.1 > size && storage.length > 5) {resize("decrease");}
+            if(storage.length * 0.1 > size && storage.length > 5) {
+                resize("decrease");
+            }
         }
         else {
-            if(storage.length / 4 > size) {resize("increase");}
+            if(storage.length / 4 > size) {
+                resize("decrease");
+            }
         }
         return val;
     }
@@ -118,10 +122,14 @@ public class ArrayDeque<Item> {
         }
         back_index = previous(back_index);
         if (size < 16){
-            if(storage.length * 0.1 > size && storage.length > 5) {resize("decrease");}
+            if(storage.length * 0.1 > size && storage.length > 5) {
+                resize("decrease");
+            }
         }
         else {
-            if(storage.length / 4 > size) {resize("increase");}
+            if(storage.length / 4 > size) {
+                resize("decrease");
+            }
         }
         return val;
     }
