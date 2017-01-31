@@ -10,8 +10,8 @@ public class LinkedListDeque<Item> {
         private NakedList previous;
 
         public NakedList(Item f, NakedList rest, NakedList before) {
-            val =f;
-            next =rest;
+            val = f;
+            next = rest;
             previous = before;
         }
     }
@@ -38,14 +38,14 @@ public class LinkedListDeque<Item> {
         return false;
     }
     public int size() {
-    return size;
+        return size;
     }
     public void printDeque() {
         NakedList pointer = sentinel.next;
         while (pointer != sentinel) {
-                System.out.print(pointer.val + " ");
-                pointer = pointer.next;
-            }
+            System.out.print(pointer.val + " ");
+            pointer = pointer.next;
+        }
         System.out.println();
     }
     public Item removeFirst() {
@@ -83,7 +83,7 @@ public class LinkedListDeque<Item> {
         if (index == 0) {
             return l.val;
         }
-        return get_helper(index-1, l.next);
+        return get_helper(index - 1, l.next);
     }
     public Item getRecursive(int index) {
         if (index >= size) {

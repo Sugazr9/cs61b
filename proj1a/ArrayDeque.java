@@ -34,18 +34,21 @@ public class ArrayDeque<Item> {
         return index - 1;
     }
     private void resize(String command) {
-        if (command.equals("increase")){
+        if (command.equals("increase")) {
             Item[] a = (Item[]) new Object[storage.length * 2];
-            System.arraycopy(storage, front_index, a, 0, extension);
-            System.arraycopy(storage, 0, a, extension, size-extension);
-            storage = a;
-        }
-        else {
-            int ideal = storage.length / 2;
-            Item[] a = (Item[]) new Object[ideal];
             System.arraycopy(storage, front_index, a, 0, extension);
             System.arraycopy(storage, 0, a, extension, size - extension);
             storage = a;
+            front_index = 0;
+            back_index = previous(size);
+        }
+        else {
+            Item[] a = (Item[]) new Object[storage.length / 2];
+            System.arraycopy(storage, front_index, a, 0, extension);
+            System.arraycopy(storage, 0, a, extension, size - extension);
+            storage = a;
+            front_index = 0;
+            back_index = previous(size);
         }
     }
     public void addFirst(Item x){
@@ -55,7 +58,9 @@ public class ArrayDeque<Item> {
         front_index = previous(front_index);
         storage[front_index] = x;
         size++;
-        if (front_index > back_index) {extension++;}
+        if (front_index > back_index) {
+            extension++;
+        }
     }
     public void addLast(Item x) {
         if (size == storage.length) {
@@ -90,7 +95,9 @@ public class ArrayDeque<Item> {
         storage[front_index] = null;
         front_index = next(front_index);
         extension--;
-        if (front_index <= back_index) {extension = 0;}
+        if (front_index <= back_index) {
+            extension = 0;
+        }
         if (size < 16){
             if(storage.length * 0.1 > size && storage.length > 5) {resize("decrease");}
         }
