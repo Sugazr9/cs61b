@@ -4,14 +4,14 @@
 public class ArrayDeque<Item> {
     private Item[] storage;
     private int size;
-    private int FrontIndex;
-    private int BackIndex;
+    private int front;
+    private int back;
 
     public ArrayDeque() {
         storage = (Item[]) new Object[8];
         size = 0;
-        FrontIndex = 0;
-        BackIndex = 0;
+        front = 0;
+        back = 0;
     }
     private int next(int index) {
         if (isEmpty()) {
@@ -51,19 +51,19 @@ public class ArrayDeque<Item> {
         } else {
             return;
         }
-        FrontIndex = 0;
-        BackIndex = previous(size);
+        front = 0;
+        back = previous(size);
     }
     public void addFirst(Item x) {
         resize();
-        FrontIndex = previous(FrontIndex);
-        storage[FrontIndex] = x;
+        front = previous(front);
+        storage[front] = x;
         size++;
     }
     public void addLast(Item x) {
         resize();
-        BackIndex = next(BackIndex);
-        storage[BackIndex] = x;
+        back = next(back);
+        storage[back] = x;
         size++;
     }
     public boolean isEmpty() {
@@ -76,7 +76,7 @@ public class ArrayDeque<Item> {
         return size;
     }
     public void printDeque() {
-        int pointer = FrontIndex;
+        int pointer = front;
         while (storage[pointer] != null) {
             System.out.print(storage[pointer] + " ");
             pointer = next(pointer);
@@ -87,10 +87,10 @@ public class ArrayDeque<Item> {
         if (isEmpty()) {
             return null;
         }
-        Item val = storage[FrontIndex];
+        Item val = storage[front];
         size--;
-        storage[FrontIndex] = null;
-        FrontIndex = next(FrontIndex);
+        storage[front] = null;
+        front = next(front);
         resize();
         return val;
     }
@@ -98,10 +98,10 @@ public class ArrayDeque<Item> {
         if (isEmpty()) {
             return null;
         }
-        Item val = storage[BackIndex];
+        Item val = storage[back];
         size--;
-        storage[BackIndex] = null;
-        BackIndex = previous(BackIndex);
+        storage[back] = null;
+        back = previous(back);
         resize();
         return val;
     }
@@ -109,11 +109,11 @@ public class ArrayDeque<Item> {
         if (index >  size - 1) {
             return null;
         }
-        int NumbertoEnd = storage.length - FrontIndex;
-        if (FrontIndex > BackIndex && index >= NumbertoEnd) {
-            index -= NumbertoEnd;
+        int distance = storage.length - front;
+        if (front > back && index >= distance) {
+            index -= distance;
         } else {
-            index += FrontIndex;
+            index += front;
         }
         return storage[index];
     }
