@@ -4,20 +4,19 @@
 public class ArrayDeque<Item> {
     private Item[] storage;
     private int size;
-    private int front;
-    private int back;
+    private int FrontIndex;
+    private int BackIndex;
+
     public ArrayDeque() {
         storage = (Item[]) new Object[8];
         size = 0;
-        front = 0;
-        back = 0;
-
+        FrontIndex = 0;
+        BackIndex = 0;
     }
     private int next(int index) {
         if (isEmpty()) {
             return index;
-        }
-        else if (index == storage.length - 1) {
+        } else if (index == storage.length - 1) {
             return 0;
         }
         return index + 1;
@@ -25,48 +24,46 @@ public class ArrayDeque<Item> {
     private int previous(int index) {
         if (isEmpty()) {
             return index;
-        }
-        else if (index == 0) {
+        } else if (index == 0) {
             return storage.length - 1;
         }
         return index - 1;
     }
-    private void resize(String command) {
-        int pointer = front;
+    private void copy(Item[] blank) {
         int counter = 0;
-        if (command.equals("increase")) {
+        while (counter < size) {
+            blank[counter] = get(counter);
+            counter++;
+        }
+        storage = blank;
+    }
+
+    private void resize() {
+        if (size == storage.length) {
             Item[] a = (Item[]) new Object[storage.length * 2];
-            while (counter < size) {
-                a[counter] = get(counter);
-                counter++;
-            }
-            storage = a;
-        }
-        else {
+            copy(a);
+        } else if (size < 16 && storage.length * 0.1 > size && storage.length > 5) {
             Item[] a = (Item[]) new Object[storage.length / 2];
-            while (counter < size) {
-                a[counter] = get(counter);
-                counter++;
-            }
-            storage = a;
+            copy(a);
+        } else if (size > 16 && storage.length / 4 > size) {
+            Item[] a = (Item[]) new Object[storage.length / 2];
+            copy(a);
+        } else {
+            return;
         }
-        front = 0;
-        back = previous(size);
+        FrontIndex = 0;
+        BackIndex = previous(size);
     }
     public void addFirst(Item x) {
-        if (size == storage.length) {
-            resize("increase");
-        }
-        front = previous(front);
-        storage[front] = x;
+        resize();
+        FrontIndex = previous(FrontIndex);
+        storage[FrontIndex] = x;
         size++;
     }
     public void addLast(Item x) {
-        if (size == storage.length) {
-            resize("increase");
-        }
-        back = next(back);
-        storage[back] = x;
+        resize();
+        BackIndex = next(BackIndex);
+        storage[BackIndex] = x;
         size++;
     }
     public boolean isEmpty() {
@@ -79,7 +76,7 @@ public class ArrayDeque<Item> {
         return size;
     }
     public void printDeque() {
-        int pointer = front;
+        int pointer = FrontIndex;
         while (storage[pointer] != null) {
             System.out.print(storage[pointer] + " ");
             pointer = next(pointer);
@@ -90,52 +87,33 @@ public class ArrayDeque<Item> {
         if (isEmpty()) {
             return null;
         }
-        Item val = storage[front];
+        Item val = storage[FrontIndex];
         size--;
-        storage[front] = null;
-        front = next(front);
-        if (size < 16) {
-            if (storage.length * 0.1 > size && storage.length > 5) {
-                resize("decrease");
-            }
-        }
-        else {
-            if (storage.length / 4 > size) {
-                resize("decrease");
-            }
-        }
+        storage[FrontIndex] = null;
+        FrontIndex = next(FrontIndex);
+        resize();
         return val;
     }
     public Item removeLast() {
         if (isEmpty()) {
             return null;
         }
-        Item val = storage[back];
+        Item val = storage[BackIndex];
         size--;
-        storage[back] = null;
-        back = previous(back);
-        if (size < 16) {
-            if (storage.length * 0.1 > size && storage.length > 5) {
-                resize("decrease");
-            }
-        }
-        else {
-            if (storage.length / 4 > size) {
-                resize("decrease");
-            }
-        }
+        storage[BackIndex] = null;
+        BackIndex = previous(BackIndex);
+        resize();
         return val;
     }
     public Item get(int index) {
-        int num_to_break = storage.length - front;
         if (index >  size - 1) {
             return null;
         }
-        if (front > back && index >= num_to_break) {
-            index -= num_to_break;
-        }
-        else {
-            index += front;
+        int NumbertoEnd = storage.length - FrontIndex;
+        if (FrontIndex > BackIndex && index >= NumbertoEnd) {
+            index -= NumbertoEnd;
+        } else {
+            index += FrontIndex;
         }
         return storage[index];
     }

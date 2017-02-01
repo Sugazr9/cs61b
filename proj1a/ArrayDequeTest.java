@@ -57,6 +57,8 @@ public class ArrayDequeTest {
         lld1.addLast(4);
         lld1.addFirst(10);
         lld1.addLast(11);
+        lld1.addLast(3);
+
         System.out.print(lld1.get(2));
     }
 
