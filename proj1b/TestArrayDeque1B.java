@@ -10,14 +10,17 @@ public class TestArrayDeque1B {
     public void RandomArrayTest() {
         StudentArrayDeque student = new StudentArrayDeque<Integer>();
         ArrayDequeSolution solution = new ArrayDequeSolution();
+        OperationSequence log = new OperationSequence();
         while (true) {
             if (solution == null) {
                 int inserted = StdRandom.uniform(101);
                 if (StdRandom.uniform() < 0.5) {
+                    log.addOperation(new DequeOperation("addFirst", inserted));
                     solution.addFirst(inserted);
                     student.addFirst(inserted);
                 }
                 else {
+                    log.addOperation(new DequeOperation("addLast", inserted));
                     student.addLast(inserted);
                     solution.addLast(inserted);
                 }
@@ -25,16 +28,20 @@ public class TestArrayDeque1B {
                 double random = StdRandom.uniform();
                 if (random < 0.25) {
                     int inserted = StdRandom.uniform(9);
+                    log.addOperation(new DequeOperation("addLast", inserted));
                     student.addLast(inserted);
                     solution.addLast(inserted);
                 } else if (random < 0.5) {
                     int inserted = StdRandom.uniform(14);
+                    log.addOperation(new DequeOperation("addFirst", inserted));
                     solution.addFirst(inserted);
                     student.addFirst(inserted);
                 } else if (random < 0.75) {
-                    assertEquals(solution.removeFirst(), student.removeFirst());
+                    log.addOperation(new DequeOperation("removeFirst"));
+                    assertEquals(log.toString(), solution.removeFirst(), student.removeFirst());
                 } else {
-                    assertEquals(solution.removeLast(), student.removeLast());
+                    log.addOperation(new DequeOperation("removeLast"));
+                    assertEquals(log.toString(), solution.removeLast(), student.removeLast());
                 }
             }
         }
