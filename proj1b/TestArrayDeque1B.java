@@ -12,17 +12,19 @@ public class TestArrayDeque1B {
         ArrayDequeSolution solution = new ArrayDequeSolution();
         OperationSequence log = new OperationSequence();
         while (true) {
-            if (solution == null) {
+            if (solution.size() == 0) {
                 int inserted = StdRandom.uniform(101);
                 if (StdRandom.uniform() < 0.5) {
                     log.addOperation(new DequeOperation("addFirst", inserted));
                     solution.addFirst(inserted);
                     student.addFirst(inserted);
+                    assertEquals(log.toString(), solution.get(0), student.get(0));
                 }
                 else {
                     log.addOperation(new DequeOperation("addLast", inserted));
                     student.addLast(inserted);
                     solution.addLast(inserted);
+                    assertEquals(log.toString(), solution.get(0), student.get(0));
                 }
             } else {
                 double random = StdRandom.uniform();
@@ -31,11 +33,13 @@ public class TestArrayDeque1B {
                     log.addOperation(new DequeOperation("addLast", inserted));
                     student.addLast(inserted);
                     solution.addLast(inserted);
+                    assertEquals(log.toString(), solution.get(solution.size()-1), student.get(solution.size()-1));
                 } else if (random < 0.5) {
                     int inserted = StdRandom.uniform(14);
                     log.addOperation(new DequeOperation("addFirst", inserted));
                     solution.addFirst(inserted);
                     student.addFirst(inserted);
+                    assertEquals(log.toString(), solution.get(0), student.get(0));
                 } else if (random < 0.75) {
                     log.addOperation(new DequeOperation("removeFirst"));
                     assertEquals(log.toString(), solution.removeFirst(), student.removeFirst());
