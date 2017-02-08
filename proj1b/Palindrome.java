@@ -37,7 +37,7 @@ public class Palindrome {
             Deque<Character> a = wordToDeque(word);
             if (cc.equalChars(a.removeFirst(), a.removeLast())) {
                 String updated = toString(a);
-                return isPalindrome(updated);
+                return isPalindrome(updated, cc);
             } else {
                 return false;
             }

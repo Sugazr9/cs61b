@@ -7,7 +7,7 @@ import org.junit.Test;
 public class TestArrayDeque1B {
 
     @Test
-    public void Randomtest() {
+    public void randomTest() {
         StudentArrayDeque student = new StudentArrayDeque<Integer>();
         ArrayDequeSolution solution = new ArrayDequeSolution();
         OperationSequence log = new OperationSequence();
