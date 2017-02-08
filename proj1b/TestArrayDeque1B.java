@@ -11,7 +11,7 @@ public class TestArrayDeque1B {
         StudentArrayDeque student = new StudentArrayDeque<Integer>();
         ArrayDequeSolution solution = new ArrayDequeSolution();
         OperationSequence log = new OperationSequence();
-        while (true) {
+        for(int i = 0; i <= 250; i++) {
             if (solution.size() == 0) {
                 int inserted = StdRandom.uniform(101);
                 if (StdRandom.uniform() < 0.5) {
