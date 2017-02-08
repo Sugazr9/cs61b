@@ -1,10 +1,10 @@
 /**
  * Created by Arvind on 2/6/2017.
  */
-public class OffByN implements CharacterComparator{
+public class OffByN implements CharacterComparator {
     private int difference;
 
-    OffByN(int N) {
+    public OffByN(int N) {
         difference = N;
     }
 

@@ -7,11 +7,11 @@ import org.junit.Test;
 public class TestArrayDeque1B {
 
     @Test
-    public void RandomArrayTest() {
+    public void Randomtest() {
         StudentArrayDeque student = new StudentArrayDeque<Integer>();
         ArrayDequeSolution solution = new ArrayDequeSolution();
         OperationSequence log = new OperationSequence();
-        for(int i = 0; i <= 250; i++) {
+        for (int i = 0; i <= 250; i++) {
             if (solution.size() == 0) {
                 int inserted = StdRandom.uniform(101);
                 if (StdRandom.uniform() < 0.5) {
@@ -19,8 +19,7 @@ public class TestArrayDeque1B {
                     solution.addFirst(inserted);
                     student.addFirst(inserted);
                     assertEquals(log.toString(), solution.get(0), student.get(0));
-                }
-                else {
+                } else {
                     log.addOperation(new DequeOperation("addLast", inserted));
                     student.addLast(inserted);
                     solution.addLast(inserted);
@@ -33,7 +32,8 @@ public class TestArrayDeque1B {
                     log.addOperation(new DequeOperation("addLast", inserted));
                     student.addLast(inserted);
                     solution.addLast(inserted);
-                    assertEquals(log.toString(), solution.get(solution.size()-1), student.get(solution.size()-1));
+                    int index = solution.size() - 1;
+                    assertEquals(log.toString(), solution.get(index), student.get(index));
                 } else if (random < 0.5) {
                     int inserted = StdRandom.uniform(14);
                     log.addOperation(new DequeOperation("addFirst", inserted));
