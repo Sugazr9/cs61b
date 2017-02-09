@@ -4,23 +4,23 @@ ArrayDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: the firstnext and lastnext pointers could have been useful, although the use of a next and previous method could solve this
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: substituting arraryCopy with my own method for copying
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: isEmpty could have been shorter
 
 Q: What do you wish you would have known before writing ArrayDeque, if anything?
 
-A:
+A: that you can start the list in the middle (which makes addFirst to the back of the list an edge case instead of an imminent operation)
 
 Q: If you wrote ArrayDeque again, what would you do differently, if anything?
 
-A:
+A: 
 
 -----
 
@@ -28,23 +28,23 @@ LinkedListDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: assign variables to sentinel.next and sentinel.previous so code looks better
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: the implementation of sentinel (although implementing without sentinel is quite an accomplishment)
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A:	isEmpty could have been 1 line, but ended up being 5
 
-Q: What do you wish you would have known before writing ArrayDeque, if anything?
+Q: What do you wish you would have known before writing LinkedListDeque, if anything?
 
 A:
 
 Q: If you wrote LinkedListDeque again, what would you do differently, if anything?
 
-A:
+A: start with sentinel nodes first instead of trying to implement without it
 
 -----
 
@@ -52,4 +52,4 @@ Meta:
 
 Q: This is the first time we've tried something like this. Did you like this design review process? Anything we should do differently next time?
 
-A: 
+A: It was okay, but with an implement like LinkedListDeque that doesn't have that many implementation options, this process has limitations.
