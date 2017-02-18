@@ -1,16 +1,18 @@
 // TODO: Make sure to make this class a part of the synthesizer package
 // package <package name>;
+import synthesizer.AbstractBoundedQueue;
+
 import java.util.Iterator;
 
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
-public class ArrayRingBuffer<T>  {
+public class ArrayRingBuffer<T>  extends AbstractBoundedQueue{
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
     /* Index for the next enqueue. */
     private int last;
     /* Array for storing the buffer data. */
-    private T[] rb;
+    private T[] storage;
 
     /**
      * Create a new ArrayRingBuffer with the given capacity.
@@ -21,8 +23,21 @@ public class ArrayRingBuffer<T>  {
         //       this.capacity should be set appropriately. Note that the local variable
         //       here shadows the field we inherit from AbstractBoundedQueue, so
         //       you'll need to use this.capacity to set the capacity.
+        this.capacity = capacity;
+        storage = (T[]) new Object[capacity];
+        first = 0;
+        last = 0;
+        fillCount = 0;
     }
 
+    private int next(int index) {
+        if (fillCount == 0) {
+            return index;
+        } else if (index == capacity - 1) {
+            return 0;
+        }
+        return index + 1;
+    }
     /**
      * Adds x to the end of the ring buffer. If there is no room, then
      * throw new RuntimeException("Ring buffer overflow"). Exceptions
@@ -30,6 +45,10 @@ public class ArrayRingBuffer<T>  {
      */
     public void enqueue(T x) {
         // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
+        if (fillCount == capacity) {
+            return;
+        }
+        
     }
 
     /**
@@ -38,14 +57,18 @@ public class ArrayRingBuffer<T>  {
      * covered Monday.
      */
     public T dequeue() {
-        // TODO: Dequeue the first item. Don't forget to decrease fillCount and update 
+        // TODO: Dequeue the first item. Don't forget to decrease fillCount and update
+        T value = storage[first];
+        fillCount -= 1;
+        storage[first] = null;
+        first = next(first);
     }
 
     /**
      * Return oldest item, but don't remove it.
      */
     public T peek() {
-        // TODO: Return the first item. None of your instance variables should change.
+       return storage[first];
     }
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
