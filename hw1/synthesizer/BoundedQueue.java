@@ -3,7 +3,7 @@ package synthesizer;
 /**
  * Created by Arvind on 2/17/2017.
  */
-public interface BoundedQueue <T> {
+public interface BoundedQueue<T> {
     int capacity();    // max size of queue
     int fillCount();  //size of queue
     void enqueue(T x);   //add item to end
