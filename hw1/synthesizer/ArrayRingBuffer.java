@@ -76,6 +76,7 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T> {
         public T next() {
             T result = (T) storage[current];
             if (fillCount == 0) {
+                ;
             } else if (current == capacity - 1) {
                 current = 0;
             } else {
