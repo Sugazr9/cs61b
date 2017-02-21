@@ -13,10 +13,6 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T> {
      * Create a new ArrayRingBuffer with the given capacity.
      */
     public ArrayRingBuffer(int capacity) {
-        //       first, last, and fillCount should all be set to 0.
-        //       this.capacity should be set appropriately. Note that the local variable
-        //       here shadows the field we inherit from AbstractBoundedQueue, so
-        //       you'll need to use this.capacity to set the capacity.
         this.capacity = capacity;
         storage = (T[]) new Object[capacity];
         first = 0;
@@ -75,7 +71,7 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T> {
         return storage[first];
     }
 
-    private class myIterator<T> implements Iterator<T> {
+    private class MyIterator<T> implements Iterator<T> {
         int current = first;
         public T next() {
             T result = (T) storage[current];
@@ -93,7 +89,7 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T> {
     }
 
     public Iterator<T> iterator() {
-        return new myIterator<T>();
+        return new MyIterator<T>();
     }
 
 }
