@@ -30,6 +30,27 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T>{
         last = 0;
         fillCount = 0;
     }
+    private class myIterator<T> implements Iterator<T> {
+        int current = first;
+        public T next() {
+            T result = (T) storage[current];
+            if (fillCount == 0) {
+            } else if (current == capacity - 1) {
+                current = 0;
+            } else {
+                current++;
+            }
+            return result;
+        }
+        public boolean hasNext() {
+            return current != last;
+        }
+    }
+
+    public Iterator<T> iterator() {
+        return new myIterator<T>();
+    }
+
 
     private int next(int index) {
         if (fillCount == 0) {
@@ -48,11 +69,11 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T>{
     public void enqueue(T x) {
         // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
         if (fillCount == capacity) {
-            return;
+            throw new RuntimeException("Ring Buffer Overflow");
         }
         storage[next(last)] = x;
-        fillCount += 1;
         last = next(last);
+        fillCount += 1;
     }
 
     /**
@@ -63,10 +84,14 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T>{
     @Override
     public T dequeue() {
         // TODO: Dequeue the first item. Don't forget to decrease fillCount and update
+        if (fillCount == 0) {
+            throw new RuntimeException("Ring Buffer Underflow");
+        }
         T value = storage[first];
         storage[first] = null;
         fillCount -= 1;
         first = next(first);
+        return value;
     }
 
     /**

@@ -12,8 +12,20 @@ public class TestArrayRingBuffer {
         //ArrayRingBuffer arb = new ArrayRingBuffer(10);
         ArrayRingBuffer<Integer> ha = new ArrayRingBuffer<>(4);
         ha.enqueue(4);
-        assertEquals(4.0, ha.dequeue().longValue());
-        ha.enqueue();
+        double result = ha.dequeue();
+        assertEquals(4.0, result, 0.0);
+        ha.enqueue(4);
+        ha.enqueue(3);
+        ha.dequeue();
+        ha.enqueue(2);
+        ha.enqueue(1);
+        ha.enqueue(0);
+        ha.dequeue();
+        ha.dequeue();
+        ha.dequeue();
+        result = ha.dequeue();
+        assertEquals(0.0, result, 0.0);
+        ha.dequeue();
     }
 
     /** Calls tests for ArrayRingBuffer. */
