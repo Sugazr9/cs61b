@@ -42,8 +42,7 @@ public class GuitarString {
     public double sample() {
         try {
             return buffer.peek();
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             return 0;
         }
     }
