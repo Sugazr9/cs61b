@@ -35,7 +35,11 @@ public class GuitarString {
      */
     public void tic() {
         double front = buffer.dequeue();
-        buffer.enqueue(DECAY*0.5*(front + buffer.peek()));
+        if (buffer.isEmpty()) {
+            buffer.enqueue(DECAY * front);
+            return;
+        }
+        buffer.enqueue(DECAY * 0.5 * (front + buffer.peek()));
     }
 
     /* Return the double at the front of the buffer. */
