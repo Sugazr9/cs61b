@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Created by Arvind on 3/9/2017.
  */
-public class BSTMap<K extends Comparable<K>, V> implements Map61B<K,V>{
+public class BSTMap<K extends Comparable<K> , V> implements Map61B<K, V> {
     @Override
     public Iterator iterator() {
         throw new UnsupportedOperationException();
@@ -38,71 +38,69 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K,V>{
         V val;
         K key;
 
+
         Node(K k, V v) {
             left  = null;
             right = null;
             key = k;
             val = v;
         }
+        private String helper(Node p) {
+            if (p == null) {
+                return "";
+            }
+            return helper(p.left) + " " + p.key + " " + helper(p.right);
+        }
         @Override
         public String toString() {
-            if (left == null && right == null) {
-                return key.toString();
-            } else if (left == null) {
-                return key.toString() + " " + right.toString();
-            } else if (right == null) {
-                return left.toString() + " " + key.toString();
-            } else {
-                return left.toString() + " " + key.toString() + " " + right.toString();
-            }
+            return helper(this);
         }
     }
 
     public boolean containsKey(K key) {
-        Node p = top;
-        while (p != null) {
-            if(p.key.equals(key)) {
-                return true;
-            } else if (p.key.compareTo(key) > 0) {
-                p = p.left;
-            } else {
-                p = p.right;
-            }
+        Node p = find(key, top);
+        if (p == null) {
+            return false;
         }
-        return false;
+        return true;
     }
-
-    public V get(K key) {
-        Node p = top;
-        while (p!= null) {
-            if(p.key.equals(key)) {
-                return p.val;
-            } else if (p.key.compareTo(key) > 0) {
-                p = p.left;
-            } else {
-                p = p.right;
-            }
+    private Node find(K key, Node top) {
+        if (top == null) {
+            return null;
         }
-        return null;
+        if (top.key.equals(key)) {
+            return top;
+        } else if (top.key.compareTo(key) > 0) {
+            return top.left;
+        } else {
+            return top.right;
+        }
+    }
+    public V get(K key) {
+        Node p = find(key, top);
+        if (p == null) {
+            return null;
+        }
+        return p.val;
     }
 
     public void put(K key, V value) {
-        putHelper(key, value, top);
+        top = putHelper(key, value, top);
     }
 
-    public void putHelper(K key, V value, Node p) {
+    public Node putHelper(K key, V value, Node p) {
         if (p == null) {
-            p = new Node(key, value);
-            size++;
+            size ++;
+            return new Node(key, value);
         }
-        if(p.key.equals(key)) {
+        if (p.key.equals(key)) {
             p.val = value;
-            return;
         } else if (p.key.compareTo(key) > 0) {
-            putHelper(key, value, p.left);
+            p.left = putHelper(key, value, p.left);
         } else {
-            putHelper(key, value, p.right);
+            p.right = putHelper(key, value, p.right);
         }
+        return p;
     }
 
     public void clear() {
@@ -115,9 +113,6 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K,V>{
     }
 
     public void printInOrder() {
-        if (top == null) {
-            System.out.println();
-        }
         System.out.print(top.toString());
     }
 }
