@@ -3,7 +3,7 @@ package hw2;
 import edu.princeton.cs.introcs.StdRandom;
 
 public class PercolationStats {
-    int[] values;
+    double[] values;
     double average;
     double sd;
     public PercolationStats(int N, int T) {
@@ -12,7 +12,7 @@ public class PercolationStats {
         }
         average = 0.0;
         sd = 0.0;
-        values = new int[T];
+        values = new double[T];
         while (T != 0) {
             Percolation trial = new Percolation(N);
             int times = 0;
@@ -26,7 +26,7 @@ public class PercolationStats {
                 trial.open(row, col);
                 times++;
             }
-            values[T - 1] = times;
+            values[T - 1] = times / (N * N);
             T--;
         }
     }
@@ -34,8 +34,8 @@ public class PercolationStats {
     public double mean() {
         if (average == 0.0) {
             int n = values.length;
-            int sum = 0;
-            for (int x : values) {
+            double sum = 0.0;
+            for (double x : values) {
                 sum += x;
             }
             average = sum / n;
@@ -51,8 +51,8 @@ public class PercolationStats {
                 sd = Double.NaN;
             } else {
                 double sum = 0.0;
-                for (int x : values) {
-                    sum += Math.pow(x - this.mean(), 2);
+                for (double x : values) {
+                    sum += Math.pow(x - mean(), 2);
                 }
                 sd = Math.pow(sum / n, 0.5);
             }
@@ -61,10 +61,10 @@ public class PercolationStats {
     }
 
     public double confidenceLow() {
-        return this.mean() - (1.96 * this.stddev() / Math.pow(values.length, 0.5));
+        return this.mean() - (1.96 * stddev() / Math.pow(values.length, 0.5));
     }
 
     public double confidenceHigh() {
-        return this.mean() + (1.96 * this.stddev() / Math.pow(values.length, 0.5));
+        return this.mean() + (1.96 * stddev() / Math.pow(values.length, 0.5));
     }
 }                       

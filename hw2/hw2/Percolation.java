@@ -15,7 +15,7 @@ public class Percolation {
         grid = new int[N][N];
         size = N;
         opened = 0;
-        connected = new WeightedQuickUnionUF(N * N + 1);
+        connected = new WeightedQuickUnionUF(N * N + 2);
     }
 
     private void checkArgs(int row, int col) {
@@ -34,7 +34,7 @@ public class Percolation {
                 if (isOpen(row - 1, col)) {
                     connected.union(oneD, rcTo1D(row - 1, col));
                 }
-            }catch (IndexOutOfBoundsException e) {
+            } catch (IndexOutOfBoundsException e) {
                 connected.union(oneD, size * size);
             }
             try {
@@ -71,7 +71,7 @@ public class Percolation {
 
     public boolean isFull(int row, int col) {
         checkArgs(row, col);
-        return connected.connected(rcTo1D(row, col), size * size + 1);
+        return connected.connected(rcTo1D(row, col), size * size);
     }
 
     public int numberOfOpenSites() {
