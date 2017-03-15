@@ -38,7 +38,7 @@ public class Percolation {
                 connected.union(oneD, size * size);
             }
             try {
-                if (isOpen(row - 1, col)) {
+                if (isOpen(row + 1, col)) {
                     connected.union(oneD, rcTo1D(row + 1, col));
                 }
             } catch (IndexOutOfBoundsException e) {
@@ -66,7 +66,7 @@ public class Percolation {
 
     public boolean isOpen(int row, int col) {
         checkArgs(row, col);
-        return grid[col][row] == 1;
+        return grid[row][col] == 1;
     }
 
     public boolean isFull(int row, int col) {
