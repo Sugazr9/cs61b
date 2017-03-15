@@ -15,7 +15,7 @@ public class PercolationStats {
         values = new double[T];
         while (T != 0) {
             Percolation trial = new Percolation(N);
-            int times = 0;
+            double times = 0;
             while (!trial.percolates()) {
                 int row = StdRandom.uniform(N);
                 int col = StdRandom.uniform(N);
@@ -26,7 +26,7 @@ public class PercolationStats {
                 trial.open(row, col);
                 times++;
             }
-            values[T - 1] = times / (N * N);
+            values[T - 1] += times / (N * N);
             T--;
         }
     }
@@ -66,5 +66,10 @@ public class PercolationStats {
 
     public double confidenceHigh() {
         return this.mean() + (1.96 * stddev() / Math.pow(values.length, 0.5));
+    }
+
+    public static void main(String[] args) {
+        PercolationStats a = new PercolationStats(4, 10);
+        double mean = a.mean();
     }
 }                       

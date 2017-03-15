@@ -3,7 +3,7 @@ package hw2;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    int[][] grid;
+    boolean[][] grid;
     int size;
     int opened;
     WeightedQuickUnionUF connected;
@@ -12,7 +12,7 @@ public class Percolation {
         if (N <= 0) {
             throw new IllegalArgumentException();
         }
-        grid = new int[N][N];
+        grid = new boolean[N][N];
         size = N;
         opened = 0;
         connected = new WeightedQuickUnionUF(N * N + 2);
@@ -26,8 +26,8 @@ public class Percolation {
 
     public void open(int row, int col) {
         checkArgs(row, col);
-        if (grid[row][col] != 1) {
-            grid[row][col] = 1;
+        if (!grid[row][col]) {
+            grid[row][col] = true;
             opened++;
             int oneD = rcTo1D(row, col);
             try {
@@ -66,7 +66,7 @@ public class Percolation {
 
     public boolean isOpen(int row, int col) {
         checkArgs(row, col);
-        return grid[row][col] == 1;
+        return grid[row][col];
     }
 
     public boolean isFull(int row, int col) {
