@@ -1,5 +1,6 @@
 package hw2;                       
 
+import edu.princeton.cs.algs4.Stopwatch;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
@@ -44,24 +45,22 @@ public class Percolation {
             } catch (IndexOutOfBoundsException e) {
                 connected.union(oneD, size * size + 1);
             }
-            try {
+            if (col != size - 1) {
                 if (isOpen(row, col + 1)) {
                     connected.union(oneD, rcTo1D(row, col + 1));
                 }
-            } catch (IndexOutOfBoundsException e) {
             }
-            try {
+            if (col != 0) {
                 if (isOpen(row, col - 1)) {
                     connected.union(oneD, rcTo1D(row, col - 1));
                 }
-            } catch (IndexOutOfBoundsException e) {
             }
         }
     }
 
     private int rcTo1D(int row, int col) {
         checkArgs(row, col);
-        return row*size + col;
+        return row * size + col;
     }
 
     public boolean isOpen(int row, int col) {
@@ -71,7 +70,22 @@ public class Percolation {
 
     public boolean isFull(int row, int col) {
         checkArgs(row, col);
-        return connected.connected(rcTo1D(row, col), size * size);
+        int converted = rcTo1D(row, col);
+        boolean result = connected.connected(converted, size * size);
+        if (result) {
+            if (percolates()) {
+                Stopwatch a = new Stopwatch();
+                connected.connected(size * size, size * size + 1);
+                double t1 = a.elapsedTime();
+                Stopwatch b = new Stopwatch();
+                connected.connected(converted, size * size);
+                double t2 = b.elapsedTime();
+                if (t1 > t2) {
+                    return false;
+                }
+            }
+        }
+        return result;
     }
 
     public int numberOfOpenSites() {
@@ -84,6 +98,12 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
-        Percolation a = new Percolation(9);
+        Percolation a = new Percolation(4);
+        a.open(0,0);
+        a.open(1, 0);
+        a.open(2, 0);
+        a.open(3, 0);
+        a.open(3, 3);
+        a.isFull(3, 3);
     }
 }
