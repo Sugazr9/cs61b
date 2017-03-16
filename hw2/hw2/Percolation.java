@@ -71,21 +71,7 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         checkArgs(row, col);
         int converted = rcTo1D(row, col);
-        boolean result = connected.connected(converted, size * size);
-        if (result) {
-            if (percolates()) {
-                Stopwatch a = new Stopwatch();
-                connected.connected(size * size, size * size + 1);
-                double t1 = a.elapsedTime();
-                Stopwatch b = new Stopwatch();
-                connected.connected(converted, size * size);
-                double t2 = b.elapsedTime();
-                if (t1 > t2) {
-                    return false;
-                }
-            }
-        }
-        return result;
+        return connected.connected(converted, size * size);
     }
 
     public int numberOfOpenSites() {
@@ -99,7 +85,7 @@ public class Percolation {
 
     public static void main(String[] args) {
         Percolation a = new Percolation(4);
-        a.open(0,0);
+        a.open(0, 0);
         a.open(1, 0);
         a.open(2, 0);
         a.open(3, 0);
