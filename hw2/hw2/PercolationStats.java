@@ -67,9 +67,4 @@ public class PercolationStats {
     public double confidenceHigh() {
         return this.mean() + (1.96 * stddev() / Math.pow(values.length, 0.5));
     }
-
-    public static void main(String[] args) {
-        PercolationStats a = new PercolationStats(4, 10);
-        double mean = a.mean();
-    }
 }                       

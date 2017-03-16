@@ -82,14 +82,4 @@ public class Percolation {
     public boolean percolates() {
         return connected.connected(size * size, size * size + 1);
     }
-
-    public static void main(String[] args) {
-        Percolation a = new Percolation(4);
-        a.open(0, 0);
-        a.open(1, 0);
-        a.open(2, 0);
-        a.open(3, 0);
-        a.open(3, 3);
-        a.isFull(3, 3);
-    }
 }
