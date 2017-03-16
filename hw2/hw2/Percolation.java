@@ -1,6 +1,6 @@
 package hw2;                       
-
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+import edu.princeton.cs.algs4.Stopwatch;
 
 public class Percolation {
     boolean[][] grid;
@@ -70,7 +70,21 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         checkArgs(row, col);
         int converted = rcTo1D(row, col);
-        return connected.connected(converted, size * size);
+        boolean result = connected.connected(converted, size * size);
+        if (result) {
+            if (percolates()) {
+                Stopwatch a = new Stopwatch();
+                connected.connected(converted, size * size);
+                double t1 = a.elapsedTime();
+                Stopwatch b = new Stopwatch();
+                connected.connected(size * size, size * size + 1);
+                double t2 = a.elapsedTime();
+                if (t1 > t2) {
+                    return false;
+                }
+            }
+        }
+        return result;
     }
 
     public int numberOfOpenSites() {
