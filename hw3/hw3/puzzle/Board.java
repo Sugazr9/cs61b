@@ -23,15 +23,15 @@ public class Board implements WorldState{
 
     @Override
     public Iterable<WorldState> neighbors() {
-
+        return null;
     }
 
     public int hamming() {
-
+        return 0;
     }
 
     public int manhattan() {
-
+        return 0;
     }
 
     @Override
