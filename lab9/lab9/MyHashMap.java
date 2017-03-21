@@ -8,10 +8,9 @@ import java.util.Set;
 /**
  * Created by Arvind on 3/16/2017.
  */
-public class MyHashMap<K, V> implements Map61B<K, V>{
+public class MyHashMap<K, V> implements Map61B<K, V> {
     private int size;
     private double loadfactor;
-
     private ArrayList<Entry>[] map;
 
     public MyHashMap() {
@@ -66,7 +65,7 @@ public class MyHashMap<K, V> implements Map61B<K, V>{
     }
 
     private void resize() {
-        ArrayList<Entry>[] newMap = (ArrayList<Entry>[]) new ArrayList[map.length*2];
+        ArrayList<Entry>[] newMap = (ArrayList<Entry>[]) new ArrayList[map.length * 2];
         for (int i = 0; i < newMap.length; i++) {
             newMap[i] = new ArrayList<Entry>();
         }
