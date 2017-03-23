@@ -127,7 +127,8 @@ public class Board implements WorldState {
         if (!(y instanceof Board)) {
             return false;
         }
-        return y.hashCode() == hashCode();
+        Board comparing = (Board) y;
+        return Arrays.deepEquals(comparing.current, current);
     }
 
     // Returns the string representation of the board.
