@@ -3,7 +3,7 @@ package hw3.puzzle;
 import java.util.Arrays;
 import edu.princeton.cs.algs4.Queue;
 
-public class Board implements WorldState{
+public class Board implements WorldState {
     private int[][] current;
     private final int N;
 
@@ -18,7 +18,7 @@ public class Board implements WorldState{
     }
 
     public int tileAt(int i, int j) {
-        if (i < 0 || i > N -1 || j < 0 || j > N -1) {
+        if (i < 0 || i > N - 1 || j < 0 || j > N - 1) {
             throw new IndexOutOfBoundsException();
         }
         return current[i][j];
@@ -83,10 +83,10 @@ public class Board implements WorldState{
             for (int j = 0; j < N; j++) {
                 int val = current[i][j];
                 if (val != 0 && val != N * i + j + 1) {
-                        int row = (val - 1) / N;
-                        int col = (val - 1) % N;
-                        int distance = Math.abs(i - row) + Math.abs(j - col);
-                        total += distance;
+                    int row = (val - 1) / N;
+                    int col = (val - 1) % N;
+                    int distance = Math.abs(i - row) + Math.abs(j - col);
+                    total += distance;
                 }
             }
         }
@@ -127,11 +127,10 @@ public class Board implements WorldState{
     // Returns the string representation of the board.
     public String toString() {
         StringBuilder s = new StringBuilder();
-        int N = size();
         s.append(N + "\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", tileAt(i,j)));
+                s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
         }
