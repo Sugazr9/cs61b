@@ -3,12 +3,13 @@ package hw3.puzzle;
 import edu.princeton.cs.algs4.MinPQ;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class Solver {
     private ArrayList<WorldState> solved;
 
     public Solver(WorldState initial) {
-        MinPQ<Node> queue = new MinPQ<>();
+        MinPQ<Node> queue = new MinPQ<>(new NodeComparator());
         Node first = new Node(initial);
         queue.insert(first);
         while (!queue.min().state.isGoal()) {
@@ -39,7 +40,7 @@ public class Solver {
         return (ArrayList<WorldState>) solved.clone();
     }
 
-    private class Node implements Comparable {
+    private class Node {
         WorldState state;
         int moves;
         Node previous;
@@ -55,21 +56,26 @@ public class Solver {
             moves = steps;
             eta = step.estimatedDistanceToGoal() + moves;
         }
+    }
+
+    private class NodeComparator implements Comparator<Node> {
 
         @Override
-        public int compareTo(Object o) {
-            if (o == null) {
-                throw new NullPointerException();
-            } else if (!(o instanceof Node)) {
-                throw new ClassCastException();
+        public int compare(Node o1, Node o2) {
+            if(o1 == o2) {
+                return 0;
+            } else if(o1.eta < o2.eta) {
+                return -1;
+            } else if(o1.eta > o2.eta) {
+                return 1;
             } else {
-                Node comparing = (Node) o;
-                return eta - comparing.eta;
+                return 0;
             }
         }
     }
+
     public static void main(String[] args) {
-        int[][] tiles = new int[][]{new int[]{1, 2}, new int[]{0, 3}};
+        int[][] tiles = new int[][]{new int[]{0, 2}, new int[]{1, 3}};
         Board a = new Board(tiles);
         Solver test = new Solver(a);
     }
