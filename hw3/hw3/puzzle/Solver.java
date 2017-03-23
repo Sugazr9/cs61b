@@ -1,6 +1,6 @@
 package hw3.puzzle;
 
-import java.util.PriorityQueue;
+import edu.princeton.cs.algs4.MinPQ;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -8,25 +8,20 @@ public class Solver {
     private ArrayList<WorldState> solved;
 
     public Solver(WorldState initial) {
-        PriorityQueue<Node> queue = new PriorityQueue<>();
+        MinPQ<Node> queue = new MinPQ<>();
         Node first = new Node(initial);
-        queue.add(first);
-        Node end = null;
-        while (end == null) {
-            Node step = queue.remove();
-            if (!step.state.isGoal()) {
-                for (WorldState neighbor : step.state.neighbors()) {
-                    if (step.previous == null) {
-                        queue.add(new Node(neighbor, step, step.moves + 1));
-                    } else if (!step.previous.state.equals(neighbor)) {
-                        queue.add(new Node(neighbor, step, step.moves + 1));
-                    }
+        queue.insert(first);
+        while (!queue.min().state.isGoal()) {
+            Node step = queue.delMin();
+            for (WorldState neighbor : step.state.neighbors()) {
+                if (step.previous == null) {
+                    queue.insert(new Node(neighbor, step, step.moves + 1));
+                } else if (!step.previous.state.equals(neighbor)) {
+                    queue.insert(new Node(neighbor, step, step.moves + 1));
                 }
-            } else {
-                end = step;
             }
         }
-
+        Node end = queue.delMin();
         WorldState[] temp = new WorldState[end.moves + 1];
         for (int i = end.moves; i > -1; i--) {
             temp[i] = end.state;
@@ -72,5 +67,10 @@ public class Solver {
                 return eta - comparing.eta;
             }
         }
+    }
+    public static void main(String[] args) {
+        int[][] tiles = new int[][]{new int[]{1, 2}, new int[]{0, 3}};
+        Board a = new Board(tiles);
+        Solver test = new Solver(a);
     }
 }
