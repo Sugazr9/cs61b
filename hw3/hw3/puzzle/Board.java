@@ -143,13 +143,4 @@ public class Board implements WorldState {
         s.append("\n");
         return s.toString();
     }
-    public static void main(String[] args) {
-        int[][] tiles = new int[][]{new int[]{2, 3}, new int[]{1, 0}};
-        int[][] tiles2 = new int[][]{new int[]{1, 3}, new int[]{2, 0}};
-        Board a = new Board(tiles);
-        Board b = new Board(tiles2);
-        boolean ok = a.equals(b);
-        b = new Board(tiles);
-        boolean check = b.equals(a);
-    }
 }

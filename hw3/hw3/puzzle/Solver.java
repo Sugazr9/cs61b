@@ -73,10 +73,4 @@ public class Solver {
             }
         }
     }
-    public static void main(String[] args) {
-        int[][] tiles = new int[][]{new int[]{1, 0}, new int[]{3, 2}};
-        Board a = new Board(tiles);
-        Solver one = new Solver(a);
-        int moves = one.moves();
-    }
 }
