@@ -11,17 +11,22 @@ public class Solver {
         PriorityQueue<Node> queue = new PriorityQueue<>();
         Node first = new Node(initial);
         queue.add(first);
-        while (!queue.peek().state.isGoal()) {
+        Node end = null;
+        while (end == null) {
             Node step = queue.remove();
-            for (WorldState neighbor : step.state.neighbors()) {
-                if (step.previous == null) {
-                    queue.add(new Node(neighbor, step, step.moves + 1));
-                } else if (!step.previous.state.equals(neighbor)) {
-                    queue.add(new Node(neighbor, step, step.moves + 1));
+            if (!step.state.isGoal()) {
+                for (WorldState neighbor : step.state.neighbors()) {
+                    if (step.previous == null) {
+                        queue.add(new Node(neighbor, step, step.moves + 1));
+                    } else if (!step.previous.state.equals(neighbor)) {
+                        queue.add(new Node(neighbor, step, step.moves + 1));
+                    }
                 }
+            } else {
+                end = step;
             }
         }
-        Node end = queue.remove();
+
         WorldState[] temp = new WorldState[end.moves + 1];
         for (int i = end.moves; i > -1; i--) {
             temp[i] = end.state;
@@ -64,8 +69,14 @@ public class Solver {
                 throw new ClassCastException();
             } else {
                 Node comparing = (Node) o;
-                return comparing.eta - eta;
+                return eta - comparing.eta;
             }
         }
+    }
+    public static void main(String[] args) {
+        int[][] tiles = new int[][]{new int[]{1, 0}, new int[]{3, 2}};
+        Board a = new Board(tiles);
+        Solver one = new Solver(a);
+        int moves = one.moves();
     }
 }

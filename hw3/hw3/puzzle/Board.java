@@ -63,6 +63,13 @@ public class Board implements WorldState {
         return neighbors;
     }
 
+    @Override
+    public int hashCode() {
+        int result = Arrays.deepHashCode(current);
+        result = 31 * result + N;
+        return result;
+    }
+
     public int hamming() {
         int misplaced = 0;
         for (int i = 0; i < N; i++) {
@@ -120,8 +127,7 @@ public class Board implements WorldState {
         if (!(y instanceof Board)) {
             return false;
         }
-        Board compare = (Board) y;
-        return Arrays.deepEquals(compare.current, current);
+        return y.hashCode() == hashCode();
     }
 
     // Returns the string representation of the board.
@@ -136,5 +142,14 @@ public class Board implements WorldState {
         }
         s.append("\n");
         return s.toString();
+    }
+    public static void main(String[] args) {
+        int[][] tiles = new int[][]{new int[]{2, 3}, new int[]{1, 0}};
+        int[][] tiles2 = new int[][]{new int[]{1, 3}, new int[]{2, 0}};
+        Board a = new Board(tiles);
+        Board b = new Board(tiles2);
+        boolean ok = a.equals(b);
+        b = new Board(tiles);
+        boolean check = b.equals(a);
     }
 }
