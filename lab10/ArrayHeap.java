@@ -184,7 +184,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         for (int i = 2; i < contents.length; i++)  {
             if (getNode(i) == null) {
                 swap(1, i - 1);
-                sink(1);
+                if (getNode(1) != null) {
+                    sink(1);
+                }
                 break;
             } else if(i == contents.length - 1) {
                 swap(1, i);
