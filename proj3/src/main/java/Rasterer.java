@@ -15,6 +15,7 @@ public class Rasterer {
     private final double rightMostLon;
     private final double bottomMostLat;
     private final double[] LonDPPs;
+    private final double[] LonPerPic;
     /** imgRoot is the name of the directory containing the images.
      *  You may not actually need this for your class. */
     public Rasterer(String imgRoot) {
@@ -23,8 +24,10 @@ public class Rasterer {
         rightMostLon = -122.2119140625;
         bottomMostLat = 37.82280243352756;
         LonDPPs = new double[8];
+        LonPerPic = new double[8];
         for (int i = 1; i < 8; i++) {
             LonDPPs[i] = (rightMostLon - leftMostLon) / (Math.pow(2, i) * 256);
+            LonPerPic[i] = LonDPPs[i] * 256;
         }
     }
 
