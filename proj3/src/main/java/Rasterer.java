@@ -65,7 +65,6 @@ public class Rasterer {
      * @see #REQUIRED_RASTER_REQUEST_PARAMS
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        // System.out.println(params);
         Map<String, Object> results = new HashMap<>();
         double LonDDP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
         int level = 1;

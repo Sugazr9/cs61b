@@ -52,7 +52,7 @@ public class QuickSort {
             int x = val.compareTo(pivot);
             if (x == 0) {
                 equal.enqueue(val);
-            } else if(x < 0) {
+            } else if (x < 0) {
                 less.enqueue(val);
             } else {
                 greater.enqueue(val);
