@@ -72,8 +72,8 @@ public class QuickSort {
         Queue<Item> equal = new Queue<>();
         Item pivot = getRandomItem(items);
         partition(items, pivot, less, equal, greater);
-        quickSort(less);
-        quickSort(greater);
+        less = quickSort(less);
+        greater = quickSort(greater);
         return catenate(catenate(less, equal), greater);
     }
 
@@ -82,6 +82,7 @@ public class QuickSort {
         students.enqueue("Alice");
         students.enqueue("Vanessa");
         students.enqueue("Ethan");
+        students.enqueue("Greg");
         System.out.println(students.toString());
         Queue<String> ordered = quickSort(students);
         System.out.println(students.toString());
