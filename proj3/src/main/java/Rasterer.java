@@ -10,11 +10,22 @@ import java.util.Map;
 public class Rasterer {
     // Recommended: QuadTree instance variable. You'll need to make
     //              your own QuadTree since there is no built-in quadtree in Java.
-
+    private final double leftMostLon;
+    private final double topMostLat;
+    private final double rightMostLon;
+    private final double bottomMostLat;
+    private final double[] LonDPPs;
     /** imgRoot is the name of the directory containing the images.
      *  You may not actually need this for your class. */
     public Rasterer(String imgRoot) {
-        // YOUR CODE HERE
+        leftMostLon = -122.2998046875;
+        topMostLat = 37.892195547244356;
+        rightMostLon = -122.2119140625;
+        bottomMostLat = 37.82280243352756;
+        LonDPPs = new double[8];
+        for (int i = 1; i < 8; i++) {
+            LonDPPs[i] = (rightMostLon - leftMostLon) / (Math.pow(2, i) * 256);
+        }
     }
 
     /**
@@ -53,9 +64,57 @@ public class Rasterer {
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         // System.out.println(params);
         Map<String, Object> results = new HashMap<>();
+        double LonDDP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
+        int level = 1;
+        for (int i = 1; i < 8; i++) {
+            if(LonDPPs[i] < LonDDP) {
+                level = i;
+                break;
+            } else if (i == 7) {
+                level = 7;
+            }
+        }
+        results.put("depth", level);
         System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
                            + "your browser.");
         return results;
     }
 
+    private String getRight(String image) {
+        if (image.matches("*[24]")) {
+            return "";
+        }
+        int curr = Integer.getInteger(image);
+        int last = curr % 4;
+        switch (last) {
+            case 2: {
+                return getRight(String.valueOf(curr / 10)) + "1";
+            }
+            case 4: {
+                return getRight(String.valueOf(curr / 10)) + "3";
+            }
+            default: {
+                return String.valueOf(curr + 1);
+            }
+        }
+    }
+
+    private String getBottom(String image) {
+        if (image.matches("*[34]")) {
+            return "";
+        }
+        int curr = Integer.getInteger(image);
+        int last = curr % 4;
+        switch (last) {
+            case 3: {
+                return getBottom(String.valueOf(curr / 10)) + "1";
+            }
+            case 4: {
+                return getBottom(String.valueOf(curr / 10)) + "2";
+            }
+            default: {
+                return String.valueOf(curr + 2);
+            }
+        }
+    }
 }
