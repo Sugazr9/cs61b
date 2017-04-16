@@ -75,7 +75,7 @@ public class Rasterer {
         if (!((boolean) results.get("query_success"))) {
             return results;
         }
-        String[][] raster = new String[(int) results.get("height")][(int) results.get("width")];
+        String[][] raster = new String[(int) results.get("height")][(int) results.get("length")];
         String start = (String) results.get("start");
         for (int i = 0; i < raster.length; i++) {
             String edge = start;
@@ -161,7 +161,7 @@ public class Rasterer {
     }
 
     private String getRight(String image) {
-        if (image.matches("*(2|4)")) {
+        if (image.matches("(2|4)*")) {
             return "";
         } else if(image.equals("")) {
             return "";
@@ -182,7 +182,7 @@ public class Rasterer {
     }
 
     private String getBottom(String image) {
-        if (image.matches("*(3|4)")) {
+        if (image.matches("(3|4)*")) {
             return "";
         } else if(image.equals("")) {
             return "";
