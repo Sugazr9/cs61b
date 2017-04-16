@@ -71,7 +71,15 @@ public class Rasterer {
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         Map<String, Object> results = new HashMap<>();
-        operate(params, results);
+        double LonDDP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
+        int level = 1;
+        for (int i = 1; i < 8; i++) {
+            if (LonDPPs[i] <= LonDDP) {
+                level = i;
+                break;
+            }
+        }
+        operate(level, params, results);
         if (!((boolean) results.get("query_success"))) {
             return results;
         }
@@ -96,7 +104,7 @@ public class Rasterer {
         return results;
     }
 
-    private void operate(Map<String, Double> params, Map<String, Object> results) {
+    private void operate(int level, Map<String, Double> params, Map<String, Object> results) {
         double ullat = params.get("ullat");
         double lrlat = params.get("lrlat");
         double ullon = params.get("ullon");
@@ -112,39 +120,27 @@ public class Rasterer {
         String start = "";
         double left = leftMostLon;
         double top = topMostLat;
-        for (int i = 1; i < 8; i++) {
-            double LonCurr = LonPerPic[i];
-            double LatCurr = LatPerPic[i];
-            if (left - ullon > LonCurr) {
-                left += LonCurr;
-                if (top - ullat > LatCurr) {
-                    top -= LatCurr;
+        for (int i = 1; i <= level; i++) {
+            double LonPP = LonPerPic[i];
+            double LatPP = LatPerPic[i];
+            if (ullon - left > LonPP) {
+                left += LonPP;
+                if (top - ullat > LatPP) {
+                    top -= LatPP;
                     start += "4";
-                    if (LonCurr < LonDDP) {
-                        break;
-                    }
+
                 } else {
                     start += "2";
-                    if (LonCurr < LonDDP) {
-                        break;
-                    }
                 }
             } else {
-                if (top - ullat > LatCurr) {
-                    top -= LatCurr;
+                if (top - ullat > LatPP) {
+                    top -= LatPP;
                     start += "3";
-                    if (LonCurr < LonDDP) {
-                        break;
-                    }
                 } else {
                     start += "1";
-                    if (LonCurr < LonDDP) {
-                        break;
-                    }
                 }
             }
         }
-        int level = start.length();
         results.put("depth", level);
         double LonPP = LonPerPic[level];
         double LatPP = LatPerPic[level];
@@ -154,7 +150,7 @@ public class Rasterer {
         Double l = (lrlon - left) / LonPP + 1;
         results.put("length", l.intValue());
         results.put("raster_lr_lon", left + l.intValue() * LonPP);
-        Double h = (lrlat - top) / LatPP + 1;
+        Double h = (top - lrlat) / LatPP + 1;
         results.put("height", h.intValue());
         results.put("raster_lr_lat", top - h.intValue() * LatPP);
         results.put("query_success", true);
