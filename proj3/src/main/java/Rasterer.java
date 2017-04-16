@@ -77,6 +77,8 @@ public class Rasterer {
             if (LonDPPs[i] <= LonDDP) {
                 level = i;
                 break;
+            } else if (i == 7) {
+                level = 7;
             }
         }
         operate(level, params, results);
@@ -88,7 +90,7 @@ public class Rasterer {
         for (int i = 0; i < raster.length; i++) {
             String edge = start;
             for (int j = 0; j < raster[0].length; j++) {
-                if (edge == "") {
+                if (edge.equals("")) {
                     raster[i][j] = edge;
                 } else {
                     raster[i][j] = directory + edge + ".png";
@@ -117,7 +119,7 @@ public class Rasterer {
             return;
         }
         double LonDDP = (lrlon - ullon) / params.get("w");
-        String start = "";
+        StringBuilder start = new StringBuilder();
         double left = leftMostLon;
         double top = topMostLat;
         for (int i = 1; i <= level; i++) {
@@ -127,24 +129,24 @@ public class Rasterer {
                 left += LonPP;
                 if (top - ullat > LatPP) {
                     top -= LatPP;
-                    start += "4";
+                    start.append("4");
 
                 } else {
-                    start += "2";
+                    start.append("2");
                 }
             } else {
                 if (top - ullat > LatPP) {
                     top -= LatPP;
-                    start += "3";
+                    start.append("3");
                 } else {
-                    start += "1";
+                    start.append("1");
                 }
             }
         }
         results.put("depth", level);
         double LonPP = LonPerPic[level];
         double LatPP = LatPerPic[level];
-        results.put("start", start);
+        results.put("start", start.toString());
         results.put("raster_ul_lon", left);
         results.put("raster_ul_lat", top);
         Double l = (lrlon - left) / LonPP + 1;
@@ -162,8 +164,8 @@ public class Rasterer {
         } else if(image.equals("")) {
             return "";
         }
-        int curr = Integer.getInteger(image);
-        int last = curr % 4;
+        int curr = Integer.parseInt(image);
+        int last = curr % 10;
         switch (last) {
             case 2: {
                 return getRight(String.valueOf(curr / 10)) + "1";
@@ -183,8 +185,8 @@ public class Rasterer {
         } else if(image.equals("")) {
             return "";
         }
-        int curr = Integer.getInteger(image);
-        int last = curr % 4;
+        int curr = Integer.parseInt(image);
+        int last = curr % 10;
         switch (last) {
             case 3: {
                 return getBottom(String.valueOf(curr / 10)) + "1";
