@@ -153,13 +153,21 @@ public class Rasterer {
         }
         results.put("raster_ul_lon", left);
         results.put("raster_ul_lat", top);
-        Double l = (lrlon - left) / LonPP;
+        double right = lrlon;
+        if (right > rightMostLon) {
+            right = rightMostLon;
+        }
+        Double l = (right - left) / LonPP;
         if (l % 1 != 0) {
             l += 1;
         }
         results.put("length", l.intValue());
         results.put("raster_lr_lon", left + l.intValue() * LonPP);
-        Double h = (top - lrlat) / LatPP;
+        double bottom = lrlat;
+        if (bottom < bottomMostLat) {
+            bottom = bottomMostLat;
+        }
+        Double h = (top - bottom) / LatPP;
         if (h % 1 != 0) {
             h += 1;
         }
