@@ -30,9 +30,9 @@ public class Rasterer {
         LatPerPic = new double[8];
         directory = imgRoot;
         for (int i = 0; i < 8; i++) {
-            LonDPPs[i] = (rightMostLon - leftMostLon) / (Math.pow(2, i) * 256);
+            LonDPPs[i] = (rightMostLon - leftMostLon) / (Math.pow(2.0, i) * 256);
             LonPerPic[i] = LonDPPs[i] * 256;
-            LatPerPic[i] = (topMostLat - bottomMostLat) / Math.pow(2, i);
+            LatPerPic[i] = (topMostLat - bottomMostLat) / Math.pow(2.0, i);
         }
     }
 
@@ -153,10 +153,16 @@ public class Rasterer {
         }
         results.put("raster_ul_lon", left);
         results.put("raster_ul_lat", top);
-        Double l = (lrlon - left) / LonPP + 1;
+        Double l = (lrlon - left) / LonPP;
+        if (l % 1 != 0) {
+            l += 1;
+        }
         results.put("length", l.intValue());
         results.put("raster_lr_lon", left + l.intValue() * LonPP);
-        Double h = (top - lrlat) / LatPP + 1;
+        Double h = (top - lrlat) / LatPP;
+        if (h % 1 != 0) {
+            h += 1;
+        }
         results.put("height", h.intValue());
         results.put("raster_lr_lat", top - h.intValue() * LatPP);
         results.put("query_success", true);
