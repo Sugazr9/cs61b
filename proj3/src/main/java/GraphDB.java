@@ -20,6 +20,33 @@ public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
 
+    private class Node {
+        double lat;
+        double lon;
+        String name;
+        long id;
+
+        Node(long iden, double latitude, double longitude) {
+            this(iden, latitude, longitude, null);
+        }
+
+        Node(long iden, double latitude, double longitude, String naming) {
+            id = iden;
+            lat = latitude;
+            lon = longitude;
+            name = naming;
+        }
+    }
+    private class Edge {
+        Node p1;
+        Node p2;
+        double distance;
+
+        Edge(Node first, Node second) {
+
+        }
+
+    }
     /**
      * Example constructor shows how to create and start an XML parser.
      * You do not need to modify this constructor, but you're welcome to do so.
@@ -85,5 +112,17 @@ public class GraphDB {
     /** Latitude of vertex v. */
     double lat(long v) {
         return 0;
+    }
+
+    void addNode(long id, double lon, double lat) {
+        return;
+    }
+
+    void addEdge(long first, long second) {
+        return;
+    }
+
+    void updateNode(long id, String name) {
+        return;
     }
 }
