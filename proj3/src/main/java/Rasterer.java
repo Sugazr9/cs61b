@@ -14,9 +14,9 @@ public class Rasterer {
     private final double topMostLat;
     private final double rightMostLon;
     private final double bottomMostLat;
-    private final double[] LonDPPs;
-    private final double[] LonPerPic;
-    private final double[] LatPerPic;
+    private final double[] lonDPPs;
+    private final double[] lonPerPic;
+    private final double[] latPerPic;
     String directory;
     /** imgRoot is the name of the directory containing the images.
      *  You may not actually need this for your class. */
@@ -25,14 +25,14 @@ public class Rasterer {
         topMostLat = MapServer.ROOT_ULLAT;
         rightMostLon = MapServer.ROOT_LRLON;
         bottomMostLat = MapServer.ROOT_LRLAT;
-        LonDPPs = new double[8];
-        LonPerPic = new double[8];
-        LatPerPic = new double[8];
+        lonDPPs = new double[8];
+        lonPerPic = new double[8];
+        latPerPic = new double[8];
         directory = imgRoot;
         for (int i = 0; i < 8; i++) {
-            LonDPPs[i] = (rightMostLon - leftMostLon) / (Math.pow(2.0, i) * 256);
-            LonPerPic[i] = LonDPPs[i] * 256;
-            LatPerPic[i] = (topMostLat - bottomMostLat) / Math.pow(2.0, i);
+            lonDPPs[i] = (rightMostLon - leftMostLon) / (Math.pow(2.0, i) * 256);
+            lonPerPic[i] = lonDPPs[i] * 256;
+            latPerPic[i] = (topMostLat - bottomMostLat) / Math.pow(2.0, i);
         }
     }
 
@@ -69,10 +69,10 @@ public class Rasterer {
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         Map<String, Object> results = new HashMap<>();
-        double LonDDP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
+        double lonDDP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
         int level = 0;
         for (int i = 0; i < 8; i++) {
-            if (LonDPPs[i] <= LonDDP) {
+            if (lonDPPs[i] <= lonDDP) {
                 level = i;
                 break;
             } else if (i == 7) {
@@ -112,7 +112,7 @@ public class Rasterer {
         if (ullon > rightMostLon || lrlon < leftMostLon) {
             results.put("query_success", false);
             return;
-        } else if (ullat < bottomMostLat || lrlat > topMostLat){
+        } else if (ullat < bottomMostLat || lrlat > topMostLat) {
             results.put("query_success", false);
             return;
         }
@@ -120,20 +120,20 @@ public class Rasterer {
         double left = leftMostLon;
         double top = topMostLat;
         for (int i = 1; i <= level; i++) {
-            double LonPP = LonPerPic[i];
-            double LatPP = LatPerPic[i];
-            if (ullon - left >= LonPP) {
-                left += LonPP;
-                if (top - ullat >= LatPP) {
-                    top -= LatPP;
+            double lonPP = lonPerPic[i];
+            double latPP = latPerPic[i];
+            if (ullon - left >= lonPP) {
+                left += lonPP;
+                if (top - ullat >= latPP) {
+                    top -= latPP;
                     start.append("4");
 
                 } else {
                     start.append("2");
                 }
             } else {
-                if (top - ullat >= LatPP) {
-                    top -= LatPP;
+                if (top - ullat >= latPP) {
+                    top -= latPP;
                     start.append("3");
                 } else {
                     start.append("1");
@@ -141,8 +141,8 @@ public class Rasterer {
             }
         }
         results.put("depth", level);
-        double LonPP = LonPerPic[level];
-        double LatPP = LatPerPic[level];
+        double lonPP = lonPerPic[level];
+        double latPP = latPerPic[level];
         String first = start.toString();
         if (first.equals("")) {
             results.put("start", "root");
@@ -155,29 +155,29 @@ public class Rasterer {
         if (right > rightMostLon) {
             right = rightMostLon;
         }
-        Double l = (right - left) / LonPP;
+        Double l = (right - left) / lonPP;
         if (l % 1 != 0) {
             l += 1;
         }
         results.put("length", l.intValue());
-        results.put("raster_lr_lon", left + l.intValue() * LonPP);
+        results.put("raster_lr_lon", left + l.intValue() * lonPP);
         double bottom = lrlat;
         if (bottom < bottomMostLat) {
             bottom = bottomMostLat;
         }
-        Double h = (top - bottom) / LatPP;
+        Double h = (top - bottom) / latPP;
         if (h % 1 != 0) {
             h += 1;
         }
         results.put("height", h.intValue());
-        results.put("raster_lr_lat", top - h.intValue() * LatPP);
+        results.put("raster_lr_lat", top - h.intValue() * latPP);
         results.put("query_success", true);
     }
 
     private String getRight(String image) {
         if (image.matches("(2|4)*")) {
             return "";
-        } else if(image.equals("")) {
+        } else if (image.equals("")) {
             return "";
         } else if (image.equals("root")) {
             return "";
@@ -200,7 +200,7 @@ public class Rasterer {
     private String getBottom(String image) {
         if (image.matches("(3|4)*")) {
             return "";
-        } else if(image.equals("")) {
+        } else if (image.equals("")) {
             return "";
         }  else if (image.equals("root")) {
             return "";

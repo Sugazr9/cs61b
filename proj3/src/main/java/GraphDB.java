@@ -49,7 +49,7 @@ public class GraphDB {
             name = id;
         }
 
-        long getOtherEdge(long v) {
+        long getOtherVert(long v) {
             if (v == p1) {
                 return p2;
             }
@@ -110,7 +110,7 @@ public class GraphDB {
         ArrayList<Edge> next = this.edges.get(v);
         ArrayList<Long> adjs = new ArrayList<>();
         for (int i = 0; i < next.size(); i++) {
-            adjs.add(next.get(i).getOtherEdge(v));
+            adjs.add(next.get(i).getOtherVert(v));
         }
         return adjs;
     }
@@ -127,7 +127,7 @@ public class GraphDB {
         double d = 10000;
         for (long v : vertices()) {
             double curr = Math.sqrt(Math.pow(lon(v) - lon, 2) + Math.pow(lat(v) - lat, 2));
-            if(curr < d) {
+            if (curr < d) {
                 d = curr;
                 result = v;
             }
