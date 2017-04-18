@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.function.Predicate;
 
 /**
  * This class provides a shortestPath method for finding routes between two points
@@ -14,6 +17,58 @@ public class Router {
      * where the longs are node IDs.
      */
     public static LinkedList<Long> shortestPath(GraphDB g, double stlon, double stlat, double destlon, double destlat) {
-        return new LinkedList<Long>();
+            long start = g.closest(stlon, stlat);
+            long end = g.closest(destlon, destlat);
+            ArrayList<Long> visited = new ArrayList<>();
+            PriorityQueue<Node> a = new PriorityQueue<>();
+            Node starter = new Node(null, start, g.distance(start, end));
+            a.add(starter);
+            while (a.peek().current != end) {
+                Node curr = a.remove();
+                visited.add(curr.current);
+                for (Long v : g.adjacent(curr.current)) {
+                    double distance = curr.distance + g.distance(v, curr.current) + g.distance(v, end);
+                    Node vertex = new Node(curr, v, distance);
+                    if (!visited.contains(v)) {
+                        a.add(vertex);
+                    }
+                }
+            }
+            Node result = a.remove();
+            LinkedList<Long> order = new LinkedList<>();
+            while(result != null) {
+                order.addFirst(result.current);
+                result = result.previous;
+            }
+        return order;
+    }
+
+    private static class Node implements Comparable{
+        Node previous;
+        long current;
+        double distance;
+
+        Node(Node prev, long curr, double dist) {
+            previous = prev;
+            current = curr;
+            distance = dist;
+        }
+
+        @Override
+        public int compareTo(Object o) {
+            if (o == null) {
+                return -1;
+            }
+            if (getClass() != o.getClass()) {
+                return -1;
+            }
+            Node compare = (Node) o;
+            if (distance < compare.distance) {
+                return -1;
+            } else if (distance == compare.distance) {
+                return 0;
+            }
+            return 1;
+        }
     }
 }

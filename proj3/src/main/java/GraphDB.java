@@ -6,6 +6,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -19,6 +20,9 @@ import java.util.ArrayList;
 public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
+    HashMap<Long, Node> nodes = new HashMap<>();
+    HashMap<Long, ArrayList<Edge>> edges = new HashMap<>();
+    ArrayList<Node> locations = new ArrayList<>();
 
     private class Node {
         double lat;
@@ -27,23 +31,29 @@ public class GraphDB {
         long id;
 
         Node(long iden, double latitude, double longitude) {
-            this(iden, latitude, longitude, null);
-        }
-
-        Node(long iden, double latitude, double longitude, String naming) {
             id = iden;
             lat = latitude;
             lon = longitude;
-            name = naming;
         }
     }
     private class Edge {
-        Node p1;
-        Node p2;
-        double distance;
+        long p1;
+        long p2;
+        int speedLimit;
+        String name;
 
-        Edge(Node first, Node second) {
+        Edge(long first, long second, String id, int limit) {
+            p1 = first;
+            p2 = second;
+            speedLimit = limit;
+            name = id;
+        }
 
+        long getOtherEdge(long v) {
+            if (v == p1) {
+                return p2;
+            }
+            return p1;
         }
 
     }
@@ -80,50 +90,77 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        // TODO: Your code here.
+        Object[] vert = edges.keySet().toArray();
+        for (Object v : vert) {
+            ArrayList edge = edges.get(v);
+            if (edge.size() < 1) {
+                edges.remove(v);
+                nodes.remove(v);
+            }
+        }
     }
 
     /** Returns an iterable of all vertex IDs in the graph. */
     Iterable<Long> vertices() {
-        //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+        return nodes.keySet();
     }
 
     /** Returns ids of all vertices adjacent to v. */
     Iterable<Long> adjacent(long v) {
-        return null;
+        ArrayList<Edge> next = this.edges.get(v);
+        ArrayList<Long> adjs = new ArrayList<>();
+        for (int i = 0; i < next.size(); i++) {
+            adjs.add(next.get(i).getOtherEdge(v));
+        }
+        return adjs;
     }
 
     /** Returns the Euclidean distance between vertices v and w, where Euclidean distance
      *  is defined as sqrt( (lonV - lonV)^2 + (latV - latV)^2 ). */
     double distance(long v, long w) {
-        return 0;
+        return Math.sqrt(Math.pow(lon(v) - lon(w), 2) + Math.pow(lat(v) - lat(w), 2));
     }
 
     /** Returns the vertex id closest to the given longitude and latitude. */
     long closest(double lon, double lat) {
-        return 0;
+        long result = 0;
+        double d = 10000;
+        for (long v : vertices()) {
+            double curr = Math.sqrt(Math.pow(lon(v) - lon, 2) + Math.pow(lat(v) - lat, 2));
+            if(curr < d) {
+                d = curr;
+                result = v;
+            }
+        }
+        return result;
     }
 
     /** Longitude of vertex v. */
     double lon(long v) {
-        return 0;
+        Node vertex = nodes.get(v);
+        return vertex.lon;
     }
 
     /** Latitude of vertex v. */
     double lat(long v) {
-        return 0;
+        Node vertex = nodes.get(v);
+        return vertex.lat;
     }
 
     void addNode(long id, double lon, double lat) {
-        return;
+        nodes.put(id, new Node(id, lat, lon));
+        edges.put(id, new ArrayList<>());
     }
 
-    void addEdge(long first, long second) {
-        return;
+    void addEdge(long first, long second, String name, int speed) {
+        Edge e = new Edge(first, second, name, speed);
+        edges.get(first).add(e);
+        edges.get(second).add(e);
     }
 
     void updateNode(long id, String name) {
-        return;
+        Node vertex = nodes.get(id);
+        vertex.name = cleanString(name);
+        locations.add(vertex);
     }
 }

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  *  Parses OSM XML files using an XML SAX parser. Used to construct the graph of roads for
@@ -74,6 +75,7 @@ public class GraphBuildingHandler extends DefaultHandler {
             double lat = Double.parseDouble(attributes.getValue("lat"));
             features.put("id", id);
             g.addNode(id, lon, lat);
+
         } else if (qName.equals("way")) {
             /* We encountered a new <way...> tag. */
             activeState = "way";
@@ -87,23 +89,22 @@ public class GraphBuildingHandler extends DefaultHandler {
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
             if (k.equals("maxspeed")) {
-                System.out.println("Max Speed: " + v);
-                /* TODO set the max speed of the "current way" here. */
+                Scanner a = new Scanner(v);
+                Integer speed = a.nextInt();
+                a.close();
+                features.put("maxspeed", speed);
             } else if (k.equals("highway")) {
-                System.out.println("Highway type: " + v);
-                if (!ALLOWED_HIGHWAY_TYPES.contains(v)) {
+                if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
                     flag = true;
                 }
-
             } else if (k.equals("name")) {
-                System.out.println("Way Name: " + v);
+                features.put("name", v);
             }
-            System.out.println("Tag with k=" + k + ", v=" + v + ".");
+
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                 .equals("name")) {
             /* While looking at a node, we found a <tag...> with k="name". */
             g.updateNode((Long) features.get("id"), attributes.getValue("v"));
-
         }
     }
 
@@ -121,18 +122,25 @@ public class GraphBuildingHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("way")) {
-            if (flag) {
+            if (!flag) {
+                features.clear();
+                indexes.clear();
                 return;
+            }
+            String name = (String) features.get("name");
+            int speedLimit = 0;
+            if (features.containsKey("maxspeed")) {
+                speedLimit = (Integer) features.get("maxspeed");
             }
             while (indexes.size() > 1) {
                 long first = indexes.removeFirst();
-                long second = indexes.removeFirst();
-                g.addEdge(first, second);
-                indexes.addFirst(second);
+                long second = indexes.getFirst();
+                g.addEdge(first, second, name, speedLimit);
             }
+            indexes.clear();
+            features.clear();
+            flag = false;
             /* We are done looking at a way. (We finished looking at the nodes, speeds, etc...)*/
-
-            System.out.println("Finishing a way...");
         }
     }
 
