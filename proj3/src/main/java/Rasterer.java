@@ -79,7 +79,11 @@ public class Rasterer {
                 level = 7;
             }
         }
-        operate(level, params, results);
+        double ullat = params.get("ullat");
+        double lrlat = params.get("lrlat");
+        double ullon = params.get("ullon");
+        double lrlon = params.get("lrlon");
+        operate(level, ullat, lrlat, ullon, lrlon, results);
         if (!((boolean) results.get("query_success"))) {
             return results;
         }
@@ -104,11 +108,8 @@ public class Rasterer {
         return results;
     }
 
-    private void operate(int level, Map<String, Double> params, Map<String, Object> results) {
-        double ullat = params.get("ullat");
-        double lrlat = params.get("lrlat");
-        double ullon = params.get("ullon");
-        double lrlon = params.get("lrlon");
+    private void operate(int level, double ullat, double lrlat,
+                         double ullon, double lrlon, Map<String, Object> results) {
         if (ullon > rightMostLon || lrlon < leftMostLon) {
             results.put("query_success", false);
             return;
