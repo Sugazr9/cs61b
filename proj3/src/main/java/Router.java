@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 /**
  * This class provides a shortestPath method for finding routes between two points
@@ -35,7 +37,7 @@ public class Router {
         }
         Node result = a.remove();
         LinkedList<Long> order = new LinkedList<>();
-        while(result != null) {
+        while (result != null) {
             order.addFirst(result.current);
             result = result.previous;
         }

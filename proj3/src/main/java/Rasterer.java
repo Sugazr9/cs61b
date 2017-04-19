@@ -69,7 +69,11 @@ public class Rasterer {
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         Map<String, Object> results = new HashMap<>();
-        double lonDDP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
+        double ullat = params.get("ullat");
+        double lrlat = params.get("lrlat");
+        double ullon = params.get("ullon");
+        double lrlon = params.get("lrlon");
+        double lonDDP = (lrlon - ullon) / params.get("w");
         int level = 0;
         for (int i = 0; i < 8; i++) {
             if (lonDPPs[i] <= lonDDP) {
@@ -79,10 +83,6 @@ public class Rasterer {
                 level = 7;
             }
         }
-        double ullat = params.get("ullat");
-        double lrlat = params.get("lrlat");
-        double ullon = params.get("ullon");
-        double lrlon = params.get("lrlon");
         operate(level, ullat, lrlat, ullon, lrlon, results);
         if (!((boolean) results.get("query_success"))) {
             return results;
@@ -92,11 +92,7 @@ public class Rasterer {
         for (int i = 0; i < raster.length; i++) {
             String edge = start;
             for (int j = 0; j < raster[0].length; j++) {
-                if (edge.equals("")) {
-                    raster[i][j] = edge;
-                } else {
-                    raster[i][j] = directory + edge + ".png";
-                }
+                raster[i][j] = directory + edge + ".png";
                 edge = getRight(edge);
             }
             start = getBottom(start);
@@ -117,7 +113,7 @@ public class Rasterer {
             results.put("query_success", false);
             return;
         }
-        StringBuilder start = new StringBuilder();
+        String start = "";
         double left = leftMostLon;
         double top = topMostLat;
         for (int i = 1; i <= level; i++) {
@@ -127,28 +123,27 @@ public class Rasterer {
                 left += lonPP;
                 if (top - ullat >= latPP) {
                     top -= latPP;
-                    start.append("4");
+                    start+= "4";
 
                 } else {
-                    start.append("2");
+                    start += "2";
                 }
             } else {
                 if (top - ullat >= latPP) {
                     top -= latPP;
-                    start.append("3");
+                    start += "3";
                 } else {
-                    start.append("1");
+                    start += "1";
                 }
             }
         }
         results.put("depth", level);
         double lonPP = lonPerPic[level];
         double latPP = latPerPic[level];
-        String first = start.toString();
-        if (first.equals("")) {
+        if (start.equals("")) {
             results.put("start", "root");
         } else {
-            results.put("start", first);
+            results.put("start", start);
         }
         results.put("raster_ul_lon", left);
         results.put("raster_ul_lat", top);
