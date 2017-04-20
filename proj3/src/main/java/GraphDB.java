@@ -64,8 +64,9 @@ public class GraphDB {
             if (word.equals(value)) {
                 return this;
             }
+            String upNext = word.substring(0, valLength + 1);
             for (Trie check : children) {
-                if (check.value.equals(word.substring(0, valLength + 1))) {
+                if (check.value.equals(upNext)) {
                     return check.findStart(word);
                 }
             }
@@ -233,11 +234,11 @@ public class GraphDB {
         }
         for (Node n : needed.nodes) {
             HashMap<String, Object> info = new HashMap<>();
+            result.add(info);
             info.put("lat", n.lat);
             info.put("lon", n.lon);
             info.put("name", n.name);
             info.put("id", n.id);
-            result.add(info);
         }
         return result;
     }
