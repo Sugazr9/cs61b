@@ -7,6 +7,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -22,8 +23,30 @@ public class GraphDB {
      * creating helper classes, e.g. Node, Edge, etc. */
     HashMap<Long, Node> nodes = new HashMap<>();
     HashMap<Long, ArrayList<Edge>> edges = new HashMap<>();
-    ArrayList<Node> locations = new ArrayList<>();
+    LinkedList<Node> locations = new LinkedList<>();
+    Trie names = new Trie("", "");
 
+    private class Trie {
+        String value;
+        ArrayList<Node> nodes;
+        ArrayList<Trie> children;
+
+        Trie(String curr, String remaining) {
+            value = curr;
+            if (remaining.length() != 0) {
+                String upNext = curr + remaining.charAt(0);
+                Trie next = null;
+                for (int i = 0; i < children.size(); i++) {
+                    Trie current = children.get(i);
+                    if (current.value.equals(upNext)) {
+                        next = current;
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
     private class Node {
         double lat;
         double lon;

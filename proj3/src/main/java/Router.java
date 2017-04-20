@@ -21,16 +21,15 @@ public class Router {
         long end = g.closest(destlon, destlat);
         ArrayList<Long> visited = new ArrayList<>();
         PriorityQueue<Node> a = new PriorityQueue<>();
-        Node starter = new Node(null, start, g.distance(start, end));
+        Node starter = new Node(null, start, 0, g.distance(start, end));
         a.add(starter);
         while (a.peek().current != end) {
             Node curr = a.remove();
             visited.add(curr.current);
             for (Long v : g.adjacent(curr.current)) {
                 if (!visited.contains(v)) {
-                    double trekked = curr.distance + g.distance(curr.current, v);
-                    double distance = trekked + g.distance(v, end);
-                    Node vertex = new Node(curr, v, distance);
+                    double trekked = curr.trekked + g.distance(curr.current, v);
+                    Node vertex = new Node(curr, v, trekked, g.distance(v, end));
                     a.add(vertex);
                 }
             }
@@ -47,12 +46,14 @@ public class Router {
     private static class Node implements Comparable {
         Node previous;
         long current;
-        double distance;
+        double trekked;
+        double total;
 
-        Node(Node prev, long curr, double dist) {
+        Node(Node prev, long curr, double done, double left) {
             previous = prev;
             current = curr;
-            distance = dist;
+            trekked = done;
+            total = left + done;
         }
 
         @Override
@@ -64,9 +65,9 @@ public class Router {
                 throw new ClassCastException();
             }
             Node compare = (Node) o;
-            if (distance < compare.distance) {
+            if (total < compare.total) {
                 return -1;
-            } else if (distance == compare.distance) {
+            } else if (total == compare.total) {
                 return 0;
             }
             return 1;
