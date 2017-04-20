@@ -51,7 +51,8 @@ public class Rasterer {
         String file;
         int depth;
 
-        QuadTree(double ulLon, double ulLat, double lrLon, double lrLat, int level, String directory, int img) {
+        QuadTree(double ulLon, double ulLat, double lrLon, double lrLat,
+                 int level, String directory, int img) {
             depth = level;
             ullon = ulLon;
             ullat = ulLat;
@@ -71,28 +72,32 @@ public class Rasterer {
             } else {
                 double midLon = (ullon + lrlon) / 2;
                 double midLat = (ullat + lrlat) / 2;
-                topLeft = new QuadTree(ullon, ullat, midLon, midLat, level + 1, directory, img * 10 + 1);
-                topRight = new QuadTree(midLon, ullat, lrlon, midLat, level + 1, directory, img * 10 + 2);
-                bottomLeft = new QuadTree(ullon, midLat, midLon, lrlat, level + 1, directory, img * 10 + 3);
-                bottomRight = new QuadTree(midLon, midLat, lrlon, lrlat, level + 1, directory, img * 10 + 4);
+                topLeft = new QuadTree(ullon, ullat, midLon, midLat,
+                        level + 1, directory, img * 10 + 1);
+                topRight = new QuadTree(midLon, ullat, lrlon, midLat,
+                        level + 1, directory, img * 10 + 2);
+                bottomLeft = new QuadTree(ullon, midLat, midLon, lrlat,
+                        level + 1, directory, img * 10 + 3);
+                bottomRight = new QuadTree(midLon, midLat, lrlon, lrlat,
+                        level + 1, directory, img * 10 + 4);
             }
         }
 
-        QuadTree findStart(double ulLon, double ulLat, int depth) {
-            if(depth == 0) {
+        QuadTree findStart(double ulLon, double ulLat, int level) {
+            if (level == 0) {
                 return this;
             }
             if (ulLon < (ullon + lrlon) / 2) {
                 if (ulLat > (ullat + lrlat) / 2) {
-                    return topLeft.findStart(ulLon, ulLat, depth - 1);
+                    return topLeft.findStart(ulLon, ulLat, level - 1);
                 } else {
-                    return bottomLeft.findStart(ulLon, ulLat, depth - 1);
+                    return bottomLeft.findStart(ulLon, ulLat, level - 1);
                 }
             } else {
                 if (ulLat > (ullat + lrlat) / 2) {
-                    return topRight.findStart(ulLon, ulLat, depth - 1);
+                    return topRight.findStart(ulLon, ulLat, level - 1);
                 } else {
-                    return bottomRight.findStart(ulLon, ulLat, depth - 1);
+                    return bottomRight.findStart(ulLon, ulLat, level - 1);
                 }
             }
         }
