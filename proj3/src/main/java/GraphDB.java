@@ -43,6 +43,7 @@ public class GraphDB {
         void addNode(Node curr, String name) {
             if (name.length() == value.length()) {
                 nodes.add(curr);
+                return;
             }
             Trie next = null;
             String upNext = value + name.charAt(valLength);
@@ -64,7 +65,7 @@ public class GraphDB {
                 return this;
             }
             for (Trie check : children) {
-                if (check.value.equals(word.substring(0, valLength))) {
+                if (check.value.equals(word.substring(0, valLength + 1))) {
                     return check.findStart(word);
                 }
             }
