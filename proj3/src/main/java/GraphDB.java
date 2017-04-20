@@ -8,6 +8,8 @@ import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -23,29 +25,63 @@ public class GraphDB {
      * creating helper classes, e.g. Node, Edge, etc. */
     HashMap<Long, Node> nodes = new HashMap<>();
     HashMap<Long, ArrayList<Edge>> edges = new HashMap<>();
-    LinkedList<Node> locations = new LinkedList<>();
-    Trie names = new Trie("", "");
+    Trie names = new Trie("");
 
     private class Trie {
         String value;
         ArrayList<Node> nodes;
         ArrayList<Trie> children;
+        int valLength;
 
-        Trie(String curr, String remaining) {
+        Trie(String curr) {
             value = curr;
-            if (remaining.length() != 0) {
-                String upNext = curr + remaining.charAt(0);
-                Trie next = null;
-                for (int i = 0; i < children.size(); i++) {
-                    Trie current = children.get(i);
-                    if (current.value.equals(upNext)) {
-                        next = current;
-                        break;
-                    }
-                }
-            }
+            valLength = curr.length();
+            nodes = new ArrayList<>();
+            children = new ArrayList<>();
         }
 
+        void addNode(Node curr, String name) {
+            if (name.length() == value.length()) {
+                nodes.add(curr);
+            }
+            Trie next = null;
+            String upNext = value + name.charAt(valLength);
+            for (Trie check : children) {
+                if (check.value.equals(upNext)) {
+                    next = check;
+                    break;
+                }
+            }
+            if (next == null) {
+                next = new Trie(upNext);
+                children.add(next);
+            }
+            next.addNode(curr, name);
+        }
+
+        Trie findStart(String word) {
+            if (word.equals(value)) {
+                return this;
+            }
+            for (Trie check : children) {
+                if (check.value.equals(word.substring(0, valLength))) {
+                    return check.findStart(word);
+                }
+            }
+            return null;
+        }
+
+        void addNodes(LinkedList<String> master) {
+            for (Node n : nodes) {
+                master.add(n.name);
+            }
+            if (children.size() == 0) {
+                return;
+            }
+            for (Trie child : children) {
+                child.addNodes(master);
+            }
+        }
     }
     private class Node {
         double lat;
@@ -183,7 +219,36 @@ public class GraphDB {
 
     void updateNode(long id, String name) {
         Node vertex = nodes.get(id);
-        vertex.name = cleanString(name);
-        locations.add(vertex);
+        vertex.name = name;
+        names.addNode(vertex, cleanString(name));
+    }
+
+    LinkedList<Map<String, Object>> search(String locationName) {
+        String clean = cleanString(locationName);
+        Trie needed = names.findStart(clean);
+        LinkedList<Map<String, Object>> result = new LinkedList<>();
+        if (needed == null) {
+            return result;
+        }
+        for (Node n : needed.nodes) {
+            HashMap<String, Object> info = new HashMap<>();
+            info.put("lat", n.lat);
+            info.put("lon", n.lon);
+            info.put("name", n.name);
+            info.put("id", n.id);
+            result.add(info);
+        }
+        return result;
+    }
+
+    LinkedList<String> prefixSearch(String prefix) {
+        String clean = cleanString(prefix);
+        Trie needed = names.findStart(clean);
+        LinkedList<String> result = new LinkedList<>();
+        if (needed == null) {
+            return result;
+        }
+        needed.addNodes(result);
+        return result;
     }
 }
