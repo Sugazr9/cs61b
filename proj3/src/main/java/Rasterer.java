@@ -17,6 +17,7 @@ public class Rasterer {
     private final double[] lonDPPs;
     private final double[] lonPerPic;
     private final double[] latPerPic;
+    private final QuadTree tree;
     String directory;
     /** imgRoot is the name of the directory containing the images.
      *  You may not actually need this for your class. */
@@ -34,8 +35,68 @@ public class Rasterer {
             lonPerPic[i] = lonDPPs[i] * 256;
             latPerPic[i] = (topMostLat - bottomMostLat) / Math.pow(2.0, i);
         }
+        tree = new QuadTree(leftMostLon, topMostLat, rightMostLon, bottomMostLat, 0, imgRoot, 0);
     }
 
+    private class QuadTree {
+        QuadTree topLeft;
+        QuadTree topRight;
+        QuadTree bottomLeft;
+        QuadTree bottomRight;
+        double ullon;
+        double ullat;
+        double lrlon;
+        double lrlat;
+        int image;
+        String file;
+        int depth;
+
+        QuadTree(double ulLon, double ulLat, double lrLon, double lrLat, int level, String directory, int img) {
+            depth = level;
+            ullon = ulLon;
+            ullat = ulLat;
+            lrlon = lrLon;
+            lrlat = lrLat;
+            image = img;
+            if (img == 0) {
+                file = directory + "root.png";
+            } else {
+                file = directory + img + ".png";
+            }
+            if (depth == 7) {
+                topLeft = null;
+                topRight = null;
+                bottomLeft = null;
+                bottomRight = null;
+            } else {
+                double midLon = (ullon + lrlon) / 2;
+                double midLat = (ullat + lrlat) / 2;
+                topLeft = new QuadTree(ullon, ullat, midLon, midLat, level + 1, directory, img * 10 + 1);
+                topRight = new QuadTree(midLon, ullat, lrlon, midLat, level + 1, directory, img * 10 + 2);
+                bottomLeft = new QuadTree(ullon, midLat, midLon, lrlat, level + 1, directory, img * 10 + 3);
+                bottomRight = new QuadTree(midLon, midLat, lrlon, lrlat, level + 1, directory, img * 10 + 4);
+            }
+        }
+
+        QuadTree findStart(double ulLon, double ulLat, int depth) {
+            if(depth == 0) {
+                return this;
+            }
+            if (ulLon < (ullon + lrlon) / 2) {
+                if (ulLat > (ullat + lrlat) / 2) {
+                    return topLeft.findStart(ulLon, ulLat, depth - 1);
+                } else {
+                    return bottomLeft.findStart(ulLon, ulLat, depth - 1);
+                }
+            } else {
+                if (ulLat > (ullat + lrlat) / 2) {
+                    return topRight.findStart(ulLon, ulLat, depth - 1);
+                } else {
+                    return bottomRight.findStart(ulLon, ulLat, depth - 1);
+                }
+            }
+        }
+    }
     /**
      * Takes a user query and finds the grid of images that best matches the query. These
      * images will be combined into one big image (rastered) by the front end. <br>
@@ -74,6 +135,19 @@ public class Rasterer {
         double ullon = params.get("ullon");
         double lrlon = params.get("lrlon");
         double lonDDP = (lrlon - ullon) / params.get("w");
+        if (ullon > rightMostLon || lrlon < leftMostLon) {
+            results.put("query_success", false);
+            return results;
+        } else if (ullat < bottomMostLat || lrlat > topMostLat) {
+            results.put("query_success", false);
+            return results;
+        }
+        if (ullon < leftMostLon) {
+            ullon = leftMostLon;
+        }
+        if (ullat > topMostLat) {
+            ullat = topMostLat;
+        }
         int level = 0;
         for (int i = 0; i < 8; i++) {
             if (lonDPPs[i] <= lonDDP) {
@@ -83,136 +157,40 @@ public class Rasterer {
                 level = 7;
             }
         }
-        operate(level, ullat, lrlat, ullon, lrlon, results);
-        if (!((boolean) results.get("query_success"))) {
-            return results;
-        }
-        String[][] raster = new String[(int) results.get("height")][(int) results.get("length")];
-        String start = (String) results.get("start");
-        for (int i = 0; i < raster.length; i++) {
-            String edge = start;
-            for (int j = 0; j < raster[0].length; j++) {
-                raster[i][j] = directory + edge + ".png";
-                edge = getRight(edge);
-            }
-            start = getBottom(start);
-        }
-        results.remove("start");
-        results.remove("height");
-        results.remove("length");
-        results.put("render_grid", raster);
-        return results;
-    }
-
-    private void operate(int level, double ullat, double lrlat,
-                         double ullon, double lrlon, Map<String, Object> results) {
-        if (ullon > rightMostLon || lrlon < leftMostLon) {
-            results.put("query_success", false);
-            return;
-        } else if (ullat < bottomMostLat || lrlat > topMostLat) {
-            results.put("query_success", false);
-            return;
-        }
-        String start = "";
-        double left = leftMostLon;
-        double top = topMostLat;
-        for (int i = 1; i <= level; i++) {
-            double lonPP = lonPerPic[i];
-            double latPP = latPerPic[i];
-            if (ullon - left >= lonPP) {
-                left += lonPP;
-                if (top - ullat >= latPP) {
-                    top -= latPP;
-                    start+= "4";
-
-                } else {
-                    start += "2";
-                }
-            } else {
-                if (top - ullat >= latPP) {
-                    top -= latPP;
-                    start += "3";
-                } else {
-                    start += "1";
-                }
-            }
-        }
         results.put("depth", level);
-        double lonPP = lonPerPic[level];
-        double latPP = latPerPic[level];
-        if (start.equals("")) {
-            results.put("start", "root");
-        } else {
-            results.put("start", start);
-        }
+        QuadTree start = tree.findStart(ullon, ullat, level);
+        double left = start.ullon;
+        double top = start.ullat;
         results.put("raster_ul_lon", left);
         results.put("raster_ul_lat", top);
-        double right = lrlon;
-        if (right > rightMostLon) {
-            right = rightMostLon;
-        }
-        Double l = (right - left) / lonPP;
+        double lonPP = lonPerPic[level];
+        double latPP = latPerPic[level];
+        Double l = (lrlon - left) / lonPP;
         if (l % 1 != 0) {
             l += 1;
         }
-        results.put("length", l.intValue());
-        results.put("raster_lr_lon", left + l.intValue() * lonPP);
-        double bottom = lrlat;
-        if (bottom < bottomMostLat) {
-            bottom = bottomMostLat;
-        }
-        Double h = (top - bottom) / latPP;
+        int length = l.intValue();
+        results.put("raster_lr_lon", start.ullon + length * lonPP);
+        Double h = (top - lrlat) / latPP;
         if (h % 1 != 0) {
             h += 1;
         }
-        results.put("height", h.intValue());
-        results.put("raster_lr_lat", top - h.intValue() * latPP);
+        int height = h.intValue();
+        results.put("raster_lr_lat", top - height * latPP);
+        String[][] raster = new String[height][length];
+        for (int i = 0; i < raster.length; i++) {
+            double curr = left;
+            for (int j = 0; j < raster[0].length; j++) {
+                QuadTree node = tree.findStart(curr, top, level);
+                raster[i][j] = node.file;
+                curr = node.lrlon;
+                if (j == length - 1) {
+                    top = node.lrlat;
+                }
+            }
+        }
+        results.put("render_grid", raster);
         results.put("query_success", true);
-    }
-
-    private String getRight(String image) {
-        if (image.matches("(2|4)*")) {
-            return "";
-        } else if (image.equals("")) {
-            return "";
-        } else if (image.equals("root")) {
-            return "";
-        }
-        int curr = Integer.parseInt(image);
-        int last = curr % 10;
-        switch (last) {
-            case 2: {
-                return getRight(String.valueOf(curr / 10)) + "1";
-            }
-            case 4: {
-                return getRight(String.valueOf(curr / 10)) + "3";
-            }
-            default: {
-                return String.valueOf(curr + 1);
-            }
-        }
-    }
-
-    private String getBottom(String image) {
-        if (image.matches("(3|4)*")) {
-            return "";
-        } else if (image.equals("")) {
-            return "";
-        }  else if (image.equals("root")) {
-            return "";
-        }
-        int curr = Integer.parseInt(image);
-        int last = curr % 10;
-        switch (last) {
-            case 3: {
-                return getBottom(String.valueOf(curr / 10)) + "1";
-            }
-            case 4: {
-                return getBottom(String.valueOf(curr / 10)) + "2";
-            }
-            default: {
-                return String.valueOf(curr + 2);
-            }
-        }
+        return results;
     }
 }
