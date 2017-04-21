@@ -37,25 +37,34 @@ public class RadixSort
      **/
     private static void sortHelper(String[] asciis, int start, int end, int index)
     {
-        String[] result = new String[asciis.length];
-        System.arraycopy(asciis, 0, result, 0, start);
-        int k = start;
-        for (int i = start; i < asciis.length; i++) {
-            String curr = asciis[i];
-            if (curr.length() < start + 1) {
-                result[k] = curr;
-                k++;
-            }
-        }
-        if (k > end) {
+        if (start >= end) {
             return;
         }
-        int newStart = k;
+        int[] count = new int[267];
+        for (int i = start; i < end; i++) {
+            String x = asciis[i];
+            if (x.length() < index + 1) {
+                count[0] += 1;
+            } else {
+                count[(int) x.charAt(index) + 1] += 1;
+            }
+        }
+        for (int i = 1; i < 267; i++) {
+            count[i] += count[i - 1];
+        }
+        String[] result = new String[asciis.length];
+        System.arraycopy(asciis, 0, result, 0, start);
+        int newStart = count[0] + start;
         for (int i = 0; i < 256; i++) {
-            for (String x : asciis) {
-                if (x.length() > index && (int) x.charAt(index) == i) {
-                    result[k] = x;
-                    k++;
+            for (int j = start; i < end; i ++) {
+                String s = asciis[j];
+                if (s.length() < index + 1) {
+                    result[count[0] - 1 + start] = s;
+                    count[0]--;
+                }
+                if ((int) s.charAt(index) == i) {
+                    result[count[i + 1] - 1 + start] = s;
+                    count[i + 1]--;
                 }
             }
         }
