@@ -20,7 +20,9 @@ public class RadixSort
      **/
     public static String[] sort(String[] asciis)
     {
-        return null;
+        String[] result = asciis.clone();
+        sortHelper(result, 0, result.length - 1, 0);
+        return result;
     }
 
     /**
@@ -35,6 +37,29 @@ public class RadixSort
      **/
     private static void sortHelper(String[] asciis, int start, int end, int index)
     {
-        //TODO use if you want to
+        String[] result = new String[asciis.length];
+        System.arraycopy(asciis, 0, result, 0, start);
+        int k = start;
+        for (int i = start; i < asciis.length; i++) {
+            String curr = asciis[i];
+            if (curr.length() < start + 1) {
+                result[k] = curr;
+                k++;
+            }
+        }
+        if (k > end) {
+            return;
+        }
+        int newStart = k;
+        for (int i = 0; i < 256; i++) {
+            for (String x : asciis) {
+                if (x.length() > index && (int) x.charAt(index) == i) {
+                    result[k] = x;
+                    k++;
+                }
+            }
+        }
+        asciis = result;
+        sortHelper(asciis, newStart, end, index + 1);
     }
 }
