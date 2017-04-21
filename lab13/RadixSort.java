@@ -55,17 +55,15 @@ public class RadixSort
         String[] result = new String[asciis.length];
         System.arraycopy(asciis, 0, result, 0, start);
         int newStart = count[0] + start;
-        for (int i = 0; i < 256; i++) {
-            for (int j = start; i < end; i ++) {
-                String s = asciis[j];
-                if (s.length() < index + 1) {
-                    result[count[0] - 1 + start] = s;
-                    count[0]--;
-                }
-                if ((int) s.charAt(index) == i) {
-                    result[count[i + 1] - 1 + start] = s;
-                    count[i + 1]--;
-                }
+        for (int j = start; j < end; j ++) {
+            String s = asciis[j];
+            if (s.length() < index + 1) {
+                count[0]--;
+                result[count[0] + start] = s;
+            } else {
+                int n = (int) s.charAt(index);
+                count[n + 1]--;
+                result[count[n + 1] + start] = s;
             }
         }
         asciis = result;
