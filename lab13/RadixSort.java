@@ -66,7 +66,7 @@ public class RadixSort
                 result[count[n + 1] + start] = s;
             }
         }
-        asciis = result;
+        System.arraycopy(result, 0, asciis, 0, result.length);
         sortHelper(asciis, newStart, end, index + 1);
     }
 }
