@@ -1,10 +1,9 @@
 import edu.princeton.cs.algs4.Picture;
-import edu.princeton.cs.algs4.StdOut;
 
 public class SeamCarver {
-    Picture pic;
-    int width;
-    int height;
+    private Picture pic;
+    private int width;
+    private int height;
 
     public SeamCarver(Picture picture) {
         pic = picture;
@@ -13,7 +12,7 @@ public class SeamCarver {
     }
 
     public Picture picture() {                  // current picture
-        return pic;
+        return new Picture(pic);
     }
 
     public int width() {                        // width of current picture
@@ -25,7 +24,7 @@ public class SeamCarver {
     }
 
     private void checkParams(int x, int y) {
-        if (x < 0 ||x >= width || y < 0 || y >= height) {
+        if (x < 0 || x >= width || y < 0 || y >= height) {
             throw new IndexOutOfBoundsException();
         }
     }
@@ -52,7 +51,7 @@ public class SeamCarver {
         return x - 1;
     }
 
-    private int right (int x) {
+    private int right(int x) {
         if (x == width - 1) {
             return 0;
         }
@@ -78,7 +77,7 @@ public class SeamCarver {
         int wTemp = width;
         int hTemp = height;
         Picture transposed = new Picture(height, width);
-        for (int x = 0; x < width; x ++) {
+        for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 transposed.set(y, x, temp.get(x, y));
             }
@@ -108,7 +107,8 @@ public class SeamCarver {
                         double prev = Math.min(energies[x][y - 1], energies[x - 1][y - 1]);
                         energies[x][y] = currE + prev;
                     } else {
-                        double prev = Math.min(Math.min(energies[x][y - 1], energies[x - 1][y - 1]), energies[x + 1][y -1]);
+                        double prev = Math.min(Math.min(energies[x][y - 1], energies[x - 1][y - 1]),
+                                energies[x + 1][y - 1]);
                         energies[x][y] = currE + prev;
                     }
                 }
