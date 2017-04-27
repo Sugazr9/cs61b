@@ -100,13 +100,11 @@ public class SeamCarver {
                 if (y == 0) {
                     energies[x][0] = currE;
                 } else {
-                    if (x == 0) {
-                        if (width == 1) {
-                            energies[0][y] = energies[0][y - 1] + currE;
-                        } else {
-                            double prev = Math.min(energies[0][y - 1], energies[1][y - 1]);
-                            energies[0][y] = currE + prev;
-                        }
+                    if (width == 1) {
+                        energies[0][y] = energies[0][y - 1] + currE;
+                    } else if (x == 0) {
+                        double prev = Math.min(energies[0][y - 1], energies[1][y - 1]);
+                        energies[0][y] = currE + prev;
                     } else if (x == width - 1) {
                         double prev = Math.min(energies[x][y - 1], energies[x - 1][y - 1]);
                         energies[x][y] = currE + prev;
@@ -130,7 +128,9 @@ public class SeamCarver {
             } else {
                 int prev = seam[y + 1];
                 minIndex = prev - 1;
-                if (prev == 0) {
+                if (width == 1) {
+                    minIndex = 0;
+                } else if (prev == 0) {
                     minIndex = 0;
                     if (energies[0][y] > energies[1][y]) {
                         minIndex = 1;
