@@ -6,7 +6,7 @@ public class SeamCarver {
     private int height;
 
     public SeamCarver(Picture picture) {
-        pic = picture;
+        pic = new Picture(picture);
         width = pic.width();
         height = pic.height();
     }
@@ -101,8 +101,12 @@ public class SeamCarver {
                     energies[x][0] = currE;
                 } else {
                     if (x == 0) {
-                        double prev = Math.min(energies[0][y - 1], energies[1][y - 1]);
-                        energies[0][y] = currE + prev;
+                        if (width == 1) {
+                            energies[0][y] = energies[0][y - 1] + currE;
+                        } else {
+                            double prev = Math.min(energies[0][y - 1], energies[1][y - 1]);
+                            energies[0][y] = currE + prev;
+                        }
                     } else if (x == width - 1) {
                         double prev = Math.min(energies[x][y - 1], energies[x - 1][y - 1]);
                         energies[x][y] = currE + prev;
