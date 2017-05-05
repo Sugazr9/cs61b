@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 public class BinaryTrie implements Serializable {
     Node home;
 
-    private class Node implements Comparable{
+    private class Node implements Comparable, Serializable{
         Node zero;
         Node one;
         int freq;
