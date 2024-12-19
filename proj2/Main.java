@@ -24,6 +24,9 @@ public class Main {
                 if (result.length() > 0) {
                     System.out.println(result);
                 }
+                else {
+                    System.out.println();
+                }
             }
             System.out.print(PROMPT);
         }
