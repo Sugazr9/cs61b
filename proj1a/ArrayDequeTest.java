@@ -38,7 +38,7 @@ public class ArrayDequeTest {
      * && is the "and" operation. */
     public static void addIsEmptySizeTest() {
         System.out.println("Running add/isEmpty/Size test.");
-        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        ArrayDequeImproved<Integer> lld1 = new ArrayDequeImproved<Integer>();
 
         boolean passed = checkEmpty(true, lld1.isEmpty());
 
@@ -46,20 +46,42 @@ public class ArrayDequeTest {
 
         // The && operator is the same as "and" in Python.
         // It's a binary operator that returns true if both arguments true, and false otherwise.
+        lld1.addFirst(2);
         passed = checkSize(1, lld1.size()) && passed;
         passed = checkEmpty(false, lld1.isEmpty()) && passed;
 
 
-        lld1.isEmpty();
-        lld1.addLast(2);
+        lld1.removeLast();
+        passed = checkEmpty(true, lld1.isEmpty()) && passed;
+        lld1.addLast(4);
         lld1.removeFirst();
+        passed = checkEmpty(true, lld1.isEmpty()) && passed;
         lld1.addFirst(8);
         lld1.addLast(4);
         lld1.addFirst(10);
         lld1.addLast(11);
         lld1.addLast(3);
+        for (int i = 0; i < 40; i++) {
+            if (i % 2 != 0) {
+                lld1.addFirst(i * 10);
+            }
+            else {
+                lld1.addLast(i*10);
+            }
+        }
+        for (int i = 0; i < 40; i++) {
+            if (i % 2 != 0) {
+                lld1.removeLast();
+            }
+            else {
+                lld1.removeFirst();
+            }
+        }
+        passed = checkSize(5, lld1.size()) && passed;
+        lld1.printDeque();
 
-        System.out.print(lld1.get(2));
+        System.out.println(lld1.get(2));
+        printTestStatus(passed);
     }
 
     public static void main(String[] args) {
