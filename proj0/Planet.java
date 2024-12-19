@@ -6,14 +6,14 @@ public class Planet {
 	public double mass;
 	public String imgFileName;
 
-	public Planet(double xPos, double yPos, double xVel, 
-				  double yVel, double m, String img) {
-		xxPos = xPos;
-		yyPos = yPos;
-		xxVel = xVel;
-		yyVel = yVel;
-		mass = m;
-		imgFileName = img;
+	public Planet(double xxPos, double yyPos, double xxVel,
+				  double yyVel, double mass, String imgFileName) {
+		this.xxPos = xxPos;
+		this.yyPos = yyPos;
+		this.xxVel = xxVel;
+		this.yyVel = yyVel;
+		this.mass = mass;
+		this.imgFileName = imgFileName;
 	}
 
 	public Planet(Planet p) {
@@ -26,53 +26,43 @@ public class Planet {
 	}
 
 	public double calcDistance(Planet other_p) {
-		double distance = Math.sqrt((other_p.xxPos - xxPos)*(other_p.xxPos - xxPos) + (other_p.yyPos - yyPos)*(other_p.yyPos - yyPos));
+		double distance = Math.sqrt(Math.pow(other_p.xxPos - xxPos, 2) + Math.pow(other_p.yyPos - yyPos, 2));
 		return distance;
 	}
 
 	public double calcForceExertedBy(Planet other_p) {
-		double the_force = 6.67e-11*other_p.mass*mass/((calcDistance(other_p))*(calcDistance(other_p)));
+		double the_force = 6.67e-11*other_p.mass*mass/(Math.pow(calcDistance(other_p), 2));
 		return the_force;
 	}
 
 	public double calcForceExertedByX(Planet other_p) {
-		double the_forcex = calcForceExertedBy(other_p)*(other_p.xxPos - xxPos)/calcDistance(other_p);
-		return the_forcex;
+		double the_xforce = calcForceExertedBy(other_p)*(other_p.xxPos - xxPos)/calcDistance(other_p);
+		return the_xforce;
 	}
 
 	public double calcForceExertedByY(Planet other_p) {
-		double the_forcey = calcForceExertedBy(other_p)*(other_p.yyPos - yyPos)/calcDistance(other_p);
-		return the_forcey;
+		double the_yforce = calcForceExertedBy(other_p)*(other_p.yyPos - yyPos)/calcDistance(other_p);
+		return the_yforce;
 	}
 
 	public double calcNetForceExertedByX(Planet[] system) {
-		double net_forcex = 0.0;
-		int counter = 0;
-		while (counter < system.length) {
-			if (this.equals(system[counter])) {
-			counter += 1;
-			}
-			else {
-				net_forcex += calcForceExertedByX(system[counter]);
-				counter += 1;
-			}
-		}
-		return net_forcex;
+		double net_xforce = 0.0;
+        for (Planet curr_planet : system) {
+            if (!this.equals(curr_planet)) {
+                net_xforce += calcForceExertedByX(curr_planet);
+            }
+        }
+		return net_xforce;
 	}
 
 	public double calcNetForceExertedByY(Planet[] system) {
-		double net_forcey = 0.0;
-		int counter = 0;
-		while (counter < system.length) {
-			if (this.equals(system[counter])) {
-			counter += 1;
-			}
-			else {
-				net_forcey += calcForceExertedByY(system[counter]);
-				counter += 1;
+		double net_yforce = 0.0;
+		for (Planet curr_planet : system) {
+			if (!this.equals(curr_planet)) {
+				net_yforce += calcForceExertedByY(curr_planet);
 			}
 		}
-		return net_forcey;
+		return net_yforce;
 	}
 
 	public void update(double dt, double fX, double fY) {
