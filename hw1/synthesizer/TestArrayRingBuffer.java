@@ -10,7 +10,7 @@ public class TestArrayRingBuffer {
     @Test
     public void someTest() {
         //ArrayRingBuffer arb = new ArrayRingBuffer(10);
-        ArrayRingBuffer<Integer> ha = new ArrayRingBuffer<>(4);
+        ArrayRingBuffer2<Integer> ha = new ArrayRingBuffer2<>(4);
         ha.enqueue(4);
         double result = ha.dequeue();
         assertEquals(4.0, result, 0.0);
